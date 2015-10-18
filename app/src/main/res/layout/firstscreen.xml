@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/mainmenu">
+
+
+    <ImageButton
+        android:layout_marginTop="25dp"
+        android:src="@drawable/facebook"
+        android:layout_width="317dp"
+        android:layout_height="75dp"
+        android:id="@+id/facebookbutton"
+        android:layout_gravity="center"
+        android:onClick="onclick"
+        android:contentDescription="facebtn"
+        android:background="@android:color/transparent" />
+
+    <ImageButton
+        android:layout_marginTop="120dp"
+        android:src="@drawable/google"
+        android:layout_width="317dp"
+        android:layout_height="75dp"
+        android:id="@+id/googlebutton"
+        android:layout_gravity="center"
+        android:onClick="onclick"
+        android:contentDescription="googlebtn"
+        android:background="@android:color/transparent" />
+    <ImageButton
+        android:layout_marginTop="215dp"
+        android:src="@drawable/wfibutton"
+        android:layout_width="317dp"
+        android:layout_height="75dp"
+        android:id="@+id/wfibutton"
+        android:layout_gravity="center"
+        android:scaleType="fitXY"
+        android:onClick="onclick"
+        android:contentDescription="aboutbtn"
+        android:background="@android:color/transparent" />
+
+</FrameLayout>

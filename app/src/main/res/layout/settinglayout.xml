@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/backgroundclassicmenu">
+
+
+    <ImageView
+        android:layout_marginTop="90dp"
+        android:src="@drawable/shareonfacebook"
+        android:layout_width="340dp"
+        android:layout_height="55dp"
+        android:id="@+id/sharefacebook"
+        android:layout_gravity="center"
+        android:scaleType="fitXY"
+        android:onClick="onclick" />
+
+    <ImageView
+        android:src="@drawable/about"
+        android:layout_width="340dp"
+        android:layout_height="55dp"
+        android:id="@+id/facebookbutton"
+        android:layout_gravity="center"
+        android:onClick="onclick"
+        android:layout_marginBottom="115dp"
+        android:scaleType="fitXY" />
+
+    <ImageView
+        android:layout_marginTop="20dp"
+        android:src="@drawable/setdefaulttime"
+        android:layout_width="340dp"
+        android:layout_height="65dp"
+        android:id="@+id/googlebutton"
+        android:layout_gravity="center"
+        android:onClick="onclick"
+        android:scaleType="fitXY" />
+    <ImageView
+        android:layout_marginTop="155dp"
+        android:src="@drawable/contactus"
+        android:layout_width="340dp"
+        android:layout_height="55dp"
+        android:id="@+id/wfibutton"
+        android:layout_gravity="center"
+        android:scaleType="fitXY"
+        android:onClick="onclick" />
+
+    <ImageView
+        android:layout_marginTop="25dp"
+        android:src="@drawable/setdefaulttime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/setdefaulttime"
+        android:layout_gravity="center"
+        android:onClick="onclick" />
+
+    <ImageView
+        android:src="@drawable/rateus"
+        android:layout_width="340dp"
+        android:layout_height="55dp"
+        android:id="@+id/aboutbutton"
+        android:layout_gravity="center"
+        android:onClick="onclick"
+        android:scaleType="fitXY"
+        android:layout_marginBottom="50dp" />
+
+    <ImageView
+        android:layout_width="170dp"
+        android:layout_height="55dp"
+        android:id="@+id/settingtitle"
+        android:layout_gravity="left|top"
+        android:scaleType="fitXY"
+        android:src="@drawable/settingtitle"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="70dp" />
+
+    <ImageButton
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:id="@+id/backbutton"
+        android:layout_gravity="center_horizontal|bottom"
+        android:scaleType="fitXY"
+        android:src="@drawable/backbutton"
+        android:background="@drawable/e3e3e3"
+        android:layout_marginBottom="5dp" />
+
+</FrameLayout>
