@@ -26,9 +26,12 @@ public class categorypage extends Activity implements View.OnClickListener {
         puzzlebtn = (ImageButton)findViewById(R.id.puzzlesbutton);
         newsbtn = (ImageButton)findViewById(R.id.newsbutton);
         musicbtn = (ImageButton)findViewById(R.id.musicbutton);
-        nextbtn = (ImageButton)findViewById(R.id.nextbutton);
+        nextbtn = (ImageButton)findViewById(R.id.nextbuttonnn);
         settingbtn = (ImageButton)findViewById(R.id.settings);
 
+        vidoesbtn.setTag(false);
+        gamesbtn.setTag(false);
+        Check();
         vidoesbtn.setOnClickListener(this);
         gamesbtn.setOnClickListener(this);
         jokesbtn.setOnClickListener(this);
@@ -40,28 +43,55 @@ public class categorypage extends Activity implements View.OnClickListener {
 
     }
 
+    private void Check() {
+        if(vidoesbtn.getTag().equals(true) || gamesbtn.getTag().equals(true)){
+            nextbtn.setVisibility(View.VISIBLE);
+            nextbtn.setClickable(true);
+        }
+        else{
+            nextbtn.setVisibility(View.INVISIBLE);
+            nextbtn.setClickable(false);
+        }
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.videosbutton :
-                vidoesbtn.setImageResource(R.drawable.videoschecked);
+                if(vidoesbtn.getTag().equals(false)) {
+                    vidoesbtn.setImageResource(R.drawable.videoschecked);
+                    vidoesbtn.setTag(true);
+                }
+                else {
+                    vidoesbtn.setImageResource(R.drawable.videos);
+                    vidoesbtn.setTag(false);
+                }
+                Check();
                 break;
             case R.id.gamesbutton :
-                vidoesbtn.setImageResource(R.drawable.gameschecked);
+                if(gamesbtn.getTag().equals(false)) {
+                    gamesbtn.setImageResource(R.drawable.gameschecked);
+                    gamesbtn.setTag(true);
+                }
+                else {
+                    gamesbtn.setImageResource(R.drawable.games);
+                    gamesbtn.setTag(false);
+                }
+                Check();
                 break;
             case R.id.jokesbutton :
-                Toast.makeText(this, "Will be available soon!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Jokes Will be available soon!", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.puzzlesbutton :
-                Toast.makeText(this, "Will be available soon!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Puzzles Will be available soon!", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.newsbutton :
-                Toast.makeText(this, "Will be available soon!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "News Will be available soon!", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.musicbutton :
-                Toast.makeText(this, "Will be available soon!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Music Will be available soon!", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.nextbutton :
+            case R.id.nextbuttonnn :
+                startActivity(new Intent(this,placepage.class));
                 break;
             case R.id.settings :
                 startActivity(new Intent(this,firstAct.class));
