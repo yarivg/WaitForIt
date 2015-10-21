@@ -5,4 +5,27 @@
     <dimen name="setting_option_height">90dp</dimen>
     <dimen name="setting_option_weight">650dp</dimen>
 
+
+    <!-- Hdpi screens -->
+    <dimen name="choosecategory_option_height">85dp</dimen>
+    <dimen name="choosecategory_option_width">110dp</dimen>
+    <dimen name="chooseplace_option_height">85dp</dimen>
+    <dimen name="chooseplace_option_width">90dp</dimen>
+
+
+    <!-- xHdpi screens -->
+    <dimen name="firstscreen_option_height">75dp</dimen>
+    <dimen name="firstscreen_option_weight">317dp</dimen>
+
+    <!-- xxHdpi screens -->
+    <dimen name="xxHdpi_fs_option_height">65dp</dimen>
+    <dimen name="xxHdpi_fs_option_weight">300dp</dimen>
+
+    <!-- 560dpi screens -->
+    <dimen name="f560dpi_fs_option_height">75dp</dimen>
+    <dimen name="f560dpi_fs_option_weight">350dp</dimen>
+    <dimen name="f560choosecategory_option_height">110dp</dimen>
+    <dimen name="f560choosecategory_option_width">140dp</dimen>
+    <dimen name="f560chooseplace_option_height">100dp</dimen>
+    <dimen name="f560chooseplace_option_width">120dp</dimen>
 </resources>
