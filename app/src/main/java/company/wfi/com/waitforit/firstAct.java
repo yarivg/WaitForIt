@@ -51,9 +51,11 @@ public class firstAct extends Activity implements View.OnClickListener {
                 break;
             case R.id.googlebutton:
                 startActivity(new Intent(this, categorypage.class));
+                //TODO login with google and update database
                 break;
             case R.id.facebookbutton:
                 Toast.makeText(this,"Logging through Facebook",Toast.LENGTH_SHORT).show();
+                //TODO login with facebook and update database
                 break;
             case R.id.setbtn:
                 startActivity(new Intent(this, settingcl.class));
