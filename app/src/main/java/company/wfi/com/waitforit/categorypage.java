@@ -94,7 +94,7 @@ public class categorypage extends Activity implements View.OnClickListener {
                 startActivity(new Intent(this,placepage.class));
                 break;
             case R.id.settings :
-                startActivity(new Intent(this,firstAct.class));
+                startActivity(new Intent(this,settingcl.class));
                 break;
         }
     }
