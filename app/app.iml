@@ -92,6 +92,7 @@
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="facebook-android-sdk-4.7.0" level="project" />
+    <orderEntry type="library" exported="" name="cordova-1.9.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="YouTubeAndroidPlayerApi" level="project" />
     <orderEntry type="library" exported="" name="bolts-android-1.2.0" level="project" />

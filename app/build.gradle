@@ -27,4 +27,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.facebook.android:facebook-android-sdk:4.7.0'
     compile files('libs/YouTubeAndroidPlayerApi.jar')
+    compile files('libs/cordova-1.9.0.jar')
 }

@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.yotadevices.framework.permission.ACCESS_BACKSCREEN" />
     <application
+        android:hardwareAccelerated="true"
         android:largeHeap="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -87,6 +88,7 @@
             android:configChanges=
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:name=".gameAct"
+            android:hardwareAccelerated="true"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
