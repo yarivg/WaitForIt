@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@drawable/bgclassic">
+    android:background="@drawable/bigsizeclassicmenu">
 
 
     <ImageButton
@@ -88,8 +88,7 @@
         android:layout_height="60dp"
         android:id="@+id/settings"
         android:scaleType="fitXY"
-        android:layout_gravity="left|top"
-        android:onClick="onclick" />
+        android:layout_gravity="left|top"/>
 
     <ImageButton
         android:background="@android:color/transparent"
@@ -100,8 +99,7 @@
         android:scaleType="fitXY"
         android:id="@+id/nextbuttonnn"
         android:layout_gravity="right|bottom"
-        android:layout_marginRight="15dp"
-        android:onClick="onclick" />
+        android:layout_marginRight="15dp" />
 
 
 </FrameLayout>

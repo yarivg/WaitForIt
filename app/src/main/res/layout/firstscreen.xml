@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/backfirst">
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/bigsizefirstscreen">
 
 
     <ImageButton
@@ -47,7 +47,6 @@
         android:layout_gravity="left|top"
         android:src="@drawable/settings"
         android:scaleType="fitXY"
-        android:background="@android:color/transparent"
-        android:onClick="onclick" />
+        android:background="@android:color/transparent" />
 
 </FrameLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@drawable/bgclassic">
+    android:background="@drawable/bigsizeclassicmenu">
 
 
     <ImageButton
@@ -13,8 +13,7 @@
         android:layout_height="90dp"
         android:id="@+id/nextbutton"
         android:layout_gravity="right|bottom"
-        android:layout_marginRight="15dp"
-        android:onClick="clickNext" />
+        android:layout_marginRight="15dp" />
 
     <ImageButton
         android:background="@android:color/transparent"
@@ -24,8 +23,7 @@
         android:layout_height="95dp"
         android:id="@+id/goverment"
         android:layout_gravity="center"
-        android:scaleType="fitXY"
-        android:onClick="clickCategory" />
+        android:scaleType="fitXY" />
 
     <ImageButton
         android:background="@android:color/transparent"
@@ -36,8 +34,7 @@
         android:layout_height="95dp"
         android:id="@+id/airport"
         android:layout_gravity="center"
-        android:scaleType="fitXY"
-        android:onClick="clickCategory" />
+        android:scaleType="fitXY"/>
 
     <ImageButton
         android:background="@android:color/transparent"
@@ -48,8 +45,7 @@
         android:layout_height="95dp"
         android:id="@+id/bus"
         android:layout_gravity="center"
-        android:scaleType="fitXY"
-        android:onClick="clickCategory" />
+        android:scaleType="fitXY" />
     <ImageButton
         android:background="@android:color/transparent"
         android:layout_marginLeft="120dp"
@@ -58,8 +54,7 @@
         android:layout_height="95dp"
         android:id="@+id/clinic"
         android:layout_gravity="center"
-        android:scaleType="fitXY"
-        android:onClick="clickCategory" />
+        android:scaleType="fitXY"/>
 
     <ImageButton
         android:background="@android:color/transparent"
@@ -119,8 +114,7 @@
         android:layout_height="60dp"
         android:id="@+id/settings1"
         android:scaleType="fitXY"
-        android:layout_gravity="left|top"
-        android:onClick="clicksetting" />
+        android:layout_gravity="left|top" />
 
     <ImageButton
         android:background="@android:color/transparent"
@@ -130,7 +124,6 @@
         android:id="@+id/postoffice"
         android:layout_gravity="center"
         android:scaleType="fitXY"
-        android:onClick="clickCategory"
         android:layout_marginTop="110dp" />
 
     <ImageButton
@@ -142,7 +135,6 @@
         android:layout_height="90dp"
         android:id="@+id/previousbutton"
         android:layout_gravity="left|bottom"
-        android:onClick="clickNext"
         android:layout_marginLeft="15dp" />
 
     <ImageButton
@@ -153,7 +145,6 @@
         android:id="@+id/others"
         android:layout_gravity="center"
         android:scaleType="fitXY"
-        android:onClick="clickCategory"
         android:layout_marginTop="220dp" />
 
 </FrameLayout>

@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@drawable/bgbeforegame">
+    android:background="@drawable/bigsizebeforegame">
 
 
-    <ImageView
-        android:src="@drawable/sababa"
+    <ImageButton
+    android:src="@drawable/sababa"
+        android:background="@android:color/transparent"
         android:layout_width="340dp"
         android:layout_height="90dp"
         android:id="@+id/sabababutton"
         android:layout_gravity="center"
-        android:onClick="onclick"
         android:scaleType="fitXY"
         android:layout_marginBottom="60dp" />
-
-    <ImageView
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="--:--"
+        android:id="@+id/timertxt"
+        android:layout_gravity="right|top"
+        android:textSize="30dp"
+        android:textColor="#ffffff"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="15dp" />
+    <ImageButton
         android:src="@drawable/notsababa"
+        android:background="@android:color/transparent"
         android:layout_width="340dp"
         android:layout_height="90dp"
         android:id="@+id/notsabababutton"
         android:layout_gravity="center"
-        android:onClick="onclick"
         android:scaleType="fitXY"
         android:layout_marginTop="60dp" />
 
@@ -37,7 +47,7 @@
     <ImageButton
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:id="@+id/backbutton"
+        android:id="@+id/backbuttoninrating"
         android:layout_gravity="left|top"
         android:scaleType="fitXY"
         android:src="@drawable/exitplaylist"
