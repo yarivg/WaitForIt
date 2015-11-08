@@ -9,7 +9,7 @@ android {
     }
     defaultConfig {
         applicationId "company.wfi.com.waitforit"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"

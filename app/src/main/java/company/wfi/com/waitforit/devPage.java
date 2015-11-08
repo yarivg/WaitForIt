@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 public class devPage extends Activity implements View.OnClickListener {
 
     ImageButton back;
+    //TODO check if user is logged in - and display setting icon instead of login icon
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,7 +1,10 @@
 package company.wfi.com.waitforit;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
@@ -40,7 +43,6 @@ public class categorypage extends Activity implements View.OnClickListener {
         musicbtn.setOnClickListener(this);
         nextbtn.setOnClickListener(this);
         settingbtn.setOnClickListener(this);
-
     }
 
     private void Check() {
@@ -94,9 +96,17 @@ public class categorypage extends Activity implements View.OnClickListener {
                 startActivity(new Intent(this,placepage.class));
                 break;
             case R.id.settings :
+                SharedPreferences prefs = getSharedPreferences("X", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("lastActivity", String.valueOf(categorypage.class.getName()));
+                editor.commit();
                 startActivity(new Intent(this,settingcl.class));
                 break;
         }
+    }
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this,"Back button is currently disabled.",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -112,16 +122,44 @@ public class categorypage extends Activity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        boolean mybool = false;
+        SharedPreferences prefs = getSharedPreferences("X", MODE_PRIVATE);
+        try{
+        mybool = prefs.getBoolean("gameChecked",mybool);
+        if(mybool) {
+            this.gamesbtn.setTag(mybool);
+            gamesbtn.setImageResource(R.drawable.gameschecked);
+        }
+        mybool = prefs.getBoolean("videoChecked",mybool);
+        if(mybool) {
+            this.vidoesbtn.setTag(mybool);
+            vidoesbtn.setImageResource(R.drawable.videoschecked);
+        }
+        Check();
+        SharedPreferences.Editor e = prefs.edit();
+        e.remove("videoChecked");
+        e.remove("gameChecked");
+        e.commit();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        SharedPreferences prefs = getSharedPreferences("X", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("gameChecked", (boolean) gamesbtn.getTag());
+        editor.putBoolean("videoChecked", (boolean) vidoesbtn.getTag());
+
+        editor.commit();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+
     }
 
     @Override

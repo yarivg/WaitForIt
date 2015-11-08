@@ -14,7 +14,7 @@
 
 
     <!-- xHdpi screens -->
-    <dimen name="firstscreen_option_height">75dp</dimen>
+    <dimen name="firstscreen_option_height">70dp</dimen>
     <dimen name="firstscreen_option_weight">317dp</dimen>
 
     <!-- xxHdpi screens -->
@@ -22,6 +22,8 @@
     <dimen name="xxHdpi_fs_option_weight">300dp</dimen>
 
     <!-- 560dpi screens -->
+    <dimen name="f560dpi_timer_margintop">15dp</dimen>
+    <dimen name="f560dpi_timer_marginright">28dp</dimen>
     <dimen name="f560dpi_fs_option_height">75dp</dimen>
     <dimen name="f560dpi_fs_option_weight">350dp</dimen>
     <dimen name="f560choosecategory_option_height">110dp</dimen>

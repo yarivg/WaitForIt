@@ -2,6 +2,7 @@ package company.wfi.com.waitforit;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -58,6 +59,10 @@ public class firstAct extends Activity implements View.OnClickListener {
                 //TODO login with facebook and update database
                 break;
             case R.id.setbtn:
+                SharedPreferences prefs = getSharedPreferences("X", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("lastActivity", String.valueOf(firstAct.class.getName()));
+                editor.commit();
                 startActivity(new Intent(this, settingcl.class));
                 break;
         }
