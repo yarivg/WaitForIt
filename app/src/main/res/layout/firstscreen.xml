@@ -18,16 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone" />
-    <ImageButton
-        android:layout_marginTop="120dp"
-        android:src="@drawable/google"
-        android:layout_width="317dp"
-        android:layout_height="75dp"
-        android:id="@+id/googlebutton"
-        android:layout_gravity="center"
-        android:onClick="onClick"
-        android:contentDescription="googlebtn"
-        android:background="@android:color/transparent" />
+
     <ImageButton
         android:layout_marginTop="215dp"
         android:src="@drawable/wfibutton"
@@ -47,6 +38,16 @@
         android:layout_gravity="left|top"
         android:src="@drawable/settings"
         android:scaleType="fitXY"
+        android:background="@android:color/transparent" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="320dp"
+        android:layout_height="80dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="120dp"
         android:background="@android:color/transparent" />
 
 </FrameLayout>

@@ -17,13 +17,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="--:--"
+        android:text="00:00"
         android:id="@+id/timertxt"
         android:layout_gravity="right|top"
-        android:textSize="30dp"
+        android:textSize="32dp"
         android:textColor="#ffffff"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="15dp" />
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="32dp" />
     <ImageButton
         android:src="@drawable/notsababa"
         android:background="@android:color/transparent"
