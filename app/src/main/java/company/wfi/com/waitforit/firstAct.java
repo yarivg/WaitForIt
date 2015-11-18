@@ -13,16 +13,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.LoggingBehavior;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -36,16 +46,19 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Set;
 
 public class firstAct extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,View.OnClickListener {
 
+    String registerWay;
     ImageButton google;
     ImageButton facebook;
     ImageButton set;
@@ -53,6 +66,9 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
     int session;
     SharedPreferences.Editor editor;
     SharedPreferences prefs;
+    CallbackManager callbackManager;
+    private AccessTokenTracker mTokenTracker;
+    private ProfileTracker mProfileTracker;
 
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "My Login App";
@@ -65,6 +81,21 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
 
         setContentView(R.layout.firstscreen);
 
+
+        if (BuildConfig.DEBUG) {
+            FacebookSdk.setIsDebugEnabled(true);
+            FacebookSdk.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
+        }
+
+        callbackManager = CallbackManager.Factory.create();
+        setupTokenTracker();
+        setupProfileTracker();
+
+        mTokenTracker.startTracking();
+        mProfileTracker.startTracking();
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        //--------------------
         wfi = (ImageButton)findViewById(R.id.wfibutton);
         facebook = (ImageButton)findViewById(R.id.facebookbutton);
         google = (ImageButton)findViewById(R.id.googlebutton);
@@ -77,8 +108,9 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
         if(session != 0){
             //When the user is logged in
             Toast.makeText(this, String.valueOf("Connected Successfully through Google!"),Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this,categorypage.class));
-            finish();
+            //startActivity(new Intent(this,categorypage.class));
+            //TODO return after I finish to check session
+            //finish();
         }
 
         //TODO logout app makes session zero
@@ -98,6 +130,7 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
         findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                registerWay = "google";
                 signIn();
             }
         });
@@ -117,11 +150,12 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
                 startActivity(new Intent(this,devPage.class));
                 break;
             case R.id.googlebutton:
-
                 break;
             case R.id.facebookbutton:
+                registerWay = "facebook";
+                loginOnClick();
                 Toast.makeText(this,"Logging through Facebook",Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, categorypage.class));
+                //startActivity(new Intent(this, categorypage.class));
                 //TODO(later) login with facebook and update database
                 break;
             case R.id.setbtn:
@@ -155,8 +189,8 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
 // Add the buttons
         builder.setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                if(!isNetworkAvailable(getApplicationContext())){
-                     builder.show();
+                if (!isNetworkAvailable(getApplicationContext())) {
+                    builder.show();
                 }
             }
         });
@@ -176,6 +210,8 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
     @Override
     protected void onStop() {
         super.onStop();
+        mTokenTracker.stopTracking();
+        mProfileTracker.stopTracking();
     }
 
     @Override
@@ -193,9 +229,14 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
+        if(registerWay.equals("google")) {
+            if (requestCode == RC_SIGN_IN) {
+                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+                handleSignInResult(result);
+            }
+        }
+        else if(registerWay.equals("facebook")){
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -236,5 +277,72 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
+    private void loginOnClick(){
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>(){
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                AccessToken accessToken = loginResult.getAccessToken();
+                Profile profile = Profile.getCurrentProfile();
+                Toast.makeText(getApplicationContext(), "Successfull login.", Toast.LENGTH_SHORT).show();
+//                ((TextView)findViewById(R.id.ftoken)).setText(String.valueOf(accessToken));
+//                ((TextView)findViewById(R.id.fid)).setText(String.valueOf(accessToken.getUserId()));
+//                ((TextView)findViewById(R.id.fname)).setText(String.valueOf(profile.getName()));
 
+                /* make the API call */
+                new GraphRequest(
+                        accessToken,
+                        "/me",
+                        null,
+                        HttpMethod.GET,
+                        new GraphRequest.Callback() {
+                            public void onCompleted(GraphResponse response) {
+            /* handle the result */
+                                try {
+                                    JSONArray arr = response.getJSONArray();
+                                    JSONObject jObj = arr.getJSONObject(0);
+                                    String date = jObj.getString("id");
+                                } catch (JSONException | NullPointerException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                ).executeAsync();
+                Toast.makeText(getApplicationContext(),"Facebook login succedd",Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getApplicationContext(), categorypage.class));
+
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+                Toast.makeText(getApplicationContext(), "Login was cancelled.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+                Toast.makeText(getApplicationContext(), "Exeption: " + exception.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void setupTokenTracker() {
+        mTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+                Log.d("VIVZ", "" + currentAccessToken);
+                //TODO Save to shared preferences
+            }
+        };
+    }
+
+    private void setupProfileTracker() {
+        mProfileTracker = new ProfileTracker() {
+            @Override
+            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                Log.d("VIVZ", "" + currentProfile);
+                //Save to shared preferences
+            }
+        };
+    }
 }

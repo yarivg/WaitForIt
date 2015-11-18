@@ -13,11 +13,6 @@
         android:onClick="onClick"
         android:contentDescription="facebtn"
         android:background="@android:color/transparent" />
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
 
     <ImageButton
         android:layout_marginTop="215dp"
