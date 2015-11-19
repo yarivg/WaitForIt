@@ -278,16 +278,30 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
 
     }
     private void loginOnClick(){
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
+        //TODO check if age_range is enough.Because user_birthday is an extra parameter.
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email","user_birthday"));
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>(){
             @Override
             public void onSuccess(LoginResult loginResult) {
                 AccessToken accessToken = loginResult.getAccessToken();
                 Profile profile = Profile.getCurrentProfile();
                 Toast.makeText(getApplicationContext(), "Successfull login.", Toast.LENGTH_SHORT).show();
-//                ((TextView)findViewById(R.id.ftoken)).setText(String.valueOf(accessToken));
-//                ((TextView)findViewById(R.id.fid)).setText(String.valueOf(accessToken.getUserId()));
-//                ((TextView)findViewById(R.id.fname)).setText(String.valueOf(profile.getName()));
+
+                prefs = getSharedPreferences("X", MODE_PRIVATE);
+                editor = prefs.edit();
+                editor.putString("UserName",profile.getName());
+                //editor.putString("UserEmail",personEmail);
+                editor.putString("UserEmail","");
+                editor.putString("UserId",accessToken.getUserId());
+                //editor.putString("UserPhoto", String.valueOf(personPhoto));
+                editor.putString("UserPhoto",profile.getProfilePictureUri(100,100).toString());
+                //http://graph.facebook.com/67563683055/picture?type=square
+                //TODO use the line above to get the image
+                //TODO check how to get age and email both in google and facebook
+                //TODO whenever the user login through favebook , need to change session(shared preferences)
+                editor.putString("UserToken",String.valueOf(accessToken));
+                editor.putInt("Session",1);
+                editor.commit();
 
                 /* make the API call */
                 new GraphRequest(
