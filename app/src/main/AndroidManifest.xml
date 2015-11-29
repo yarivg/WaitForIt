@@ -9,10 +9,10 @@
         android:hardwareAccelerated="true"
         android:largeHeap="true"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/wfilogo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <provider android:authorities="com.facebook.app.FacebookContentProvider1510587639255251"
+        <provider android:authorities="com.facebook.app.FacebookContentProvider959247700788663"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true" />
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
@@ -149,6 +149,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".testClass"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            ></activity>
     </application>
 
 </manifest>

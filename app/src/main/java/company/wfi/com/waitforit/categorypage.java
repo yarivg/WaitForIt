@@ -12,9 +12,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-/**
- * Created by User on 18/10/2015.
- */
 public class categorypage extends Activity implements View.OnClickListener {
 
     ImageButton vidoesbtn,gamesbtn,jokesbtn,puzzlebtn,newsbtn,musicbtn,nextbtn,settingbtn;
@@ -43,6 +40,8 @@ public class categorypage extends Activity implements View.OnClickListener {
         musicbtn.setOnClickListener(this);
         nextbtn.setOnClickListener(this);
         settingbtn.setOnClickListener(this);
+
+        Internet.ShowScreenGroup(this);
     }
 
     private void Check() {
