@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/bigsizefirstscreen">
+
+
+    <ImageButton
+        android:layout_marginTop="25dp"
+        android:src="@drawable/facebook"
+        android:layout_width="@dimen/f560dpi_fs_option_weight"
+        android:layout_height="@dimen/f560dpi_fs_option_height"
+        android:id="@+id/facebookbutton"
+        android:layout_gravity="center"
+        android:onClick="onClick"
+        android:contentDescription="facebtn"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY" />
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="@dimen/f560dpi_fs_option_weight"
+        android:layout_height="@dimen/f560dpi_fs_option_height"
+        android:layout_gravity="center"
+        android:layout_marginTop="125dp"
+        android:background="@android:color/transparent" />
+
+    <ImageButton
+        android:layout_marginTop="225dp"
+        android:src="@drawable/wfibutton"
+        android:layout_width="@dimen/f560dpi_fs_option_weight"
+        android:layout_height="@dimen/f560dpi_fs_option_height"
+        android:id="@+id/wfibutton"
+        android:layout_gravity="center"
+        android:scaleType="fitXY"
+        android:onClick="onClick"
+        android:contentDescription="aboutbtn"
+        android:background="@android:color/transparent" />
+
+    <ImageButton
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/setbtn"
+        android:layout_gravity="left|top"
+        android:src="@drawable/settings"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent"
+        android:onClick="onclick" />
+
+</FrameLayout>

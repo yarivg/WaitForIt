@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/bigsizewaitingover">
+
+    <ImageButton
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:id="@+id/settingbutton"
+        android:layout_gravity="left|top"
+        android:src="@drawable/settings"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent"
+        android:onClick="onclick" />
+    <ImageButton
+        android:layout_marginTop="80dp"
+        android:src="@drawable/continuetowait"
+        android:layout_width="330dp"
+        android:scaleType="fitXY"
+        android:layout_height="70dp"
+        android:id="@+id/conwaiting"
+        android:layout_gravity="center"
+        android:onClick="onClick"
+        android:contentDescription="facebtn"
+        android:background="@android:color/transparent" />
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+    <ImageButton
+        android:layout_marginTop="170dp"
+        android:src="@drawable/rateus"
+        android:scaleType="fitXY"
+        android:layout_width="330dp"
+        android:layout_height="70dp"
+        android:id="@+id/ratebutton"
+        android:layout_gravity="center"
+        android:onClick="onClick"
+        android:contentDescription="googlebtn"
+        android:background="@android:color/transparent" />
+    <ImageButton
+        android:layout_marginTop="260dp"
+        android:src="@drawable/shareonfacebook"
+        android:layout_width="330dp"
+        android:layout_height="70dp"
+        android:id="@+id/sharebutton"
+        android:layout_gravity="center"
+        android:scaleType="fitXY"
+        android:onClick="onClick"
+        android:contentDescription="aboutbtn"
+        android:background="@android:color/transparent" />
+
+
+
+</FrameLayout>

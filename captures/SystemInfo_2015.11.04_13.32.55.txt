@@ -1,0 +1,19 @@
+TASK company.wfi.com.waitforit id=61
+  ACTIVITY company.wfi.com.waitforit/.gameAct 42f6ce00 pid=16319
+    Local Activity 42694c80 State:
+      mResumed=true mStopped=false mFinished=false
+      mLoadersStarted=true
+      mChangingConfigurations=false
+      mCurrentConfig={1 0 1.0 ?mcc?mnc iw_IL ldrtl sw360dp w360dp h615dp 320dpi nrml long port finger -keyb/v/h -nav/h s.62}
+    FragmentManager misc state:
+      mActivity=company.wfi.com.waitforit.gameAct@42694c80
+      mContainer=android.app.Activity$1@42694e08
+      mCurState=5 mStateSaved=false mDestroyed=false
+    View Hierarchy:
+      com.android.internal.policy.impl.PhoneWindow$DecorView{426975a0 V.E..... R....... 0,0-720,1280}
+        android.widget.LinearLayout{426997e8 V.E..... ........ 0,0-720,1280}
+          android.view.ViewStub{4269b270 G.E..... ......I. 0,0-0,0 #102045c}
+          android.widget.FrameLayout{4269b718 V.ED.... ........ 0,50-720,1280 #1020002 android:id/content}
+            android.widget.FrameLayout{426a0338 V.E..... ........ 0,0-720,1230}
+              android.widget.ImageButton{426947e8 VFED..C. ........ 0,0-110,110 #7f0d008d app:id/pausegame}
+              org.apache.cordova.CordovaWebView{426887a8 VFEDH.CL .F...... 0,125-720,1230 #7f0d008e app:id/mainView}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/bigsizeingame"
+    tools:context=".videopage">
+
+
+    <ImageButton
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:id="@+id/outofvideopage"
+        android:layout_gravity="left|top"
+        android:scaleType="fitXY"
+        android:src="@drawable/exitplaylist"
+        android:background="@android:color/transparent"
+        android:layout_marginBottom="5dp" />
+
+    <com.google.android.youtube.player.YouTubePlayerView
+        android:layout_width="match_parent"
+        android:id="@+id/videoview"
+        android:layout_height="510dp"
+        android:layout_gravity="center|bottom" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="00:00"
+        android:id="@+id/timertxt"
+        android:layout_gravity="right|top"
+        android:textSize="30dp"
+        android:textColor="#ffffff"
+        android:layout_marginRight="28dp"
+        android:layout_marginTop="15dp" />
+</FrameLayout>
