@@ -9,11 +9,10 @@
         android:layout_gravity="left|top"
         android:src="@drawable/settings"
         android:scaleType="fitXY"
-        android:background="@android:color/transparent"
-        android:onClick="onclick" />
+        android:background="@android:color/transparent" />
     <ImageButton
         android:layout_marginTop="80dp"
-        android:src="@drawable/continuetowait"
+        android:src="@drawable/continurewaiting"
         android:layout_width="317dp"
         android:scaleType="fitXY"
         android:layout_height="65dp"

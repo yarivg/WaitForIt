@@ -7,8 +7,8 @@
     <ImageButton
         android:background="@android:color/transparent"
         android:src="@drawable/min1"
-        android:layout_width="180dp"
-        android:layout_height="170dp"
+        android:layout_width="160dp"
+        android:layout_height="150dp"
         android:id="@+id/waitingtime"
         android:layout_gravity="center"
         android:scaleType="fitXY"
@@ -16,21 +16,12 @@
 
 
     <ImageView
-        android:layout_marginTop="90dp"
-        android:layout_marginLeft="20dp"
-        android:src="@drawable/setdedaulttimetitle"
-        android:layout_width="240dp"
-        android:layout_height="55dp"
-        android:id="@+id/titleunknown"
-        android:scaleType="fitXY"
-        android:layout_gravity="left|top" />
-    <ImageView
-        android:layout_marginTop="175dp"
+        android:layout_marginTop="70dp"
         android:layout_marginLeft="10dp"
-        android:src="@drawable/settimetext"
-        android:layout_width="360dp"
-        android:layout_height="110dp"
-        android:id="@+id/justtitle"
+        android:src="@drawable/setdedaulttimetitle"
+        android:layout_width="220dp"
+        android:layout_height="45dp"
+        android:id="@+id/titleunknown"
         android:scaleType="fitXY"
         android:layout_gravity="left|top" />
 
@@ -41,12 +32,11 @@
         android:layout_height="60dp"
         android:id="@+id/settings"
         android:scaleType="fitXY"
-        android:layout_gravity="left|top"
-        android:onClick="clicksetting" />
+        android:layout_gravity="left|top" />
 
     <ImageButton
-        android:layout_width="85dp"
-        android:layout_height="85dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:id="@+id/plusbutton"
         android:layout_gravity="right|center_vertical"
         android:src="@drawable/plus"
@@ -56,8 +46,8 @@
         android:layout_marginTop="80dp"/>
 
     <ImageButton
-        android:layout_width="85dp"
-        android:layout_height="85dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:id="@+id/minusbutton"
         android:layout_gravity="left|center_vertical"
         android:src="@drawable/minus"
@@ -67,15 +57,25 @@
         android:layout_marginTop="80dp"/>
 
     <ImageButton
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="25dp"
         android:src="@drawable/donebutton"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
         android:id="@+id/donebtn"
         android:scaleType="fitXY"
         android:background="@android:color/transparent"
         android:layout_gravity="center_horizontal|bottom"
         android:onClick="onClick" />
+
+    <ImageView
+        android:layout_marginTop="130dp"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/settimetext"
+        android:layout_width="320dp"
+        android:layout_height="135dp"
+        android:id="@+id/justtitle"
+        android:scaleType="fitXY"
+        android:layout_gravity="left|top" />
 
 
 </FrameLayout>

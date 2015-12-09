@@ -8,10 +8,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -33,28 +38,54 @@ import com.google.android.youtube.player.YouTubePlayerView;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
- * Created by User on 22/10/2015.
- */
-public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
 
+public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
+//TODO use this to solve the re-buffering problem  -https://code.google.com/p/youtube-api-samples/source/browse/android-player/src/com/examples/youtubeapidemo/FullscreenDemoActivity.java?r=c2e8be914ee785f7e14a2c5bf1f183ea2510d09c
     private String DeveloperKey = "AIzaSyBJwgHQfIaXBp-mKV8Fp68M50Me0OR8aPc";
-    private YouTubePlayerView playerView;
-    private YouTubePlayer youTubePlayer;
+
+    private static final int toMINUTE = 1000;
     public static int timeInSec = 0;
+    private YouTubePlayerView playerView;
+    final CountDownTimer countDownTimer = new CountDownTimer(timeInSec*toMINUTE, 1000) {//CountDownTimer(edittext1.getText()+edittext2.getText()) also parse it to long
+        public void onTick(long millisUntilFinished) {
+            if (millisUntilFinished / 1000 / 60 >= 10) {
+                if (millisUntilFinished / 1000 % 60 >= 10)
+                    timer.setText(String.valueOf(millisUntilFinished / 1000 / 60 + ":" + millisUntilFinished / 1000 % 60));
+                else
+                    timer.setText(String.valueOf(millisUntilFinished / 1000 / 60 + ":0" + millisUntilFinished / 1000 % 60));
+            } else {
+                if (millisUntilFinished / 1000 % 60 >= 10)
+                    timer.setText("0" + String.valueOf(millisUntilFinished / 1000 / 60 + ":" + millisUntilFinished / 1000 % 60));
+                else
+                    timer.setText("0" + String.valueOf(millisUntilFinished / 1000 / 60 + ":0" + millisUntilFinished / 1000 % 60));
+            }
+            timeInSec = (int) millisUntilFinished / 1000;
+            timeInAct++;
+        }
+
+        public void onFinish() {
+            timer.setText("00:00");
+        }};
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("videopage","OnStart");
+    }
+    private Thread mThread;
+    private YouTubePlayer youTubePlayer;
     private boolean fullScreen;
     private int height,width;
     private TextView timer;
-    private static final int toMINUTE = 1000;
     private ImageButton outofvideo;
     private int topMarginTimer,heightTimer = 80;
     private int timeInAct = 0;
+    public static String videoURL = "";
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
         setContentView(R.layout.videolayout);
-        outofvideo = (ImageButton) findViewById(R.id.outofvideopage);
+        outofvideo = (ImageButton) findViewById(R.id.exitplaylistbtn);
         outofvideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +95,8 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
         timer = (TextView)findViewById(R.id.timertxt);
         playerView = (YouTubePlayerView) findViewById(R.id.videoview);
         playerView.initialize(DeveloperKey, this);
-
+        Typeface fontTimer = Typeface.createFromAsset(getAssets(),"fonts/Ailerons.ttf");
+        timer.setTypeface(fontTimer);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -80,28 +112,41 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
                 return true;
             }
         });
-
-        StartTimer();
         MakePlayerFullScreenPortrait();
+        //countDownTimer.start();
+        StartThisClock();
     }
-    private void HideStatusBar(){
-        if (Build.VERSION.SDK_INT < 16) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
-        else {
-            View decorView = getWindow().getDecorView();
-            // Hide the status bar.
-            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
 
-        }
+
+    private void StartThisClock() {
+        Thread t = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                timer.setText(myClock.getTimeText());
+                            }
+                        });
+                        Thread.sleep(1000);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        t.start();
     }
     private void FullScreenLandSpace(){
         HideViews();
         //HideStatusBar();
         playerView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
     }
+    //TODO add method called onConfigurationChanged to detect any screen orientaition change and handle the transition between portrait and landspace.
     private void MakePlayerFullScreenPortrait(){
         FrameLayout.LayoutParams myLayout = (FrameLayout.LayoutParams)playerView.getLayoutParams();
         timer.setVisibility(View.VISIBLE);
@@ -109,8 +154,6 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
         ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) timer.getLayoutParams();
         ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) timer.getLayoutParams();
         topMarginTimer = lp.topMargin;
-
-        //playerView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -118,56 +161,27 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
         switch (getResources().getDisplayMetrics().densityDpi) {
             case DisplayMetrics.DENSITY_HIGH:
                 heightTimer = (int)(93*density/1.5);
-                //Toast.makeText(this,"HDPI",Toast.LENGTH_SHORT).show();
                 break;
             case DisplayMetrics.DENSITY_XHIGH:
                 heightTimer = 130;
-                //Toast.makeText(this,"xHDPI",Toast.LENGTH_SHORT).show();
                 break;
             case DisplayMetrics.DENSITY_XXHIGH:
                 heightTimer = (int)(98*density/1.5);
-                //Toast.makeText(this,"xxHDPI",Toast.LENGTH_SHORT).show();
                 break;
             case DisplayMetrics.DENSITY_560:
             case DisplayMetrics.DENSITY_XXXHIGH:
                 heightTimer = (int)(100*density/1.5);
-                //Toast.makeText(this,"560DPI",Toast.LENGTH_SHORT).show();
                 break;
             default:
-                Toast.makeText(this,String.valueOf(getResources().getDisplayMetrics().densityDpi),Toast.LENGTH_SHORT).show();
+                break;
         }
-        myLayout.height = height - (int)((heightTimer + topMarginTimer));
+        myLayout.height = height - ((heightTimer + topMarginTimer));
         playerView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, height - heightTimer - topMarginTimer));
 
         myLayout.gravity = Gravity.BOTTOM;
         playerView.setLayoutParams(myLayout);
     }
 
-    public void StartTimer(){
-        SharedPreferences prefs = getSharedPreferences("X", MODE_PRIVATE);
-        timeInSec = prefs.getInt("WaitingTime",600);
-        //A function which starts the timer or continue it
-        new CountDownTimer(timeInSec*toMINUTE, 1000) {//CountDownTimer(edittext1.getText()+edittext2.getText()) also parse it to long
-            public void onTick(long millisUntilFinished) {
-                if (millisUntilFinished / 1000 / 60 >= 10) {
-                    if (millisUntilFinished / 1000 % 60 >= 10)
-                        timer.setText(String.valueOf(millisUntilFinished / 1000 / 60 + ":" + millisUntilFinished / 1000 % 60));
-                    else
-                        timer.setText(String.valueOf(millisUntilFinished / 1000 / 60 + ":0" + millisUntilFinished / 1000 % 60));
-                } else {
-                    if (millisUntilFinished / 1000 % 60 >= 10)
-                        timer.setText("0" + String.valueOf(millisUntilFinished / 1000 / 60 + ":" + millisUntilFinished / 1000 % 60));
-                    else
-                        timer.setText("0" + String.valueOf(millisUntilFinished / 1000 / 60 + ":0" + millisUntilFinished / 1000 % 60));
-                }
-                timeInSec = (int)millisUntilFinished/1000;
-                timeInAct++;
-            }
-            public void onFinish() {
-                timer.setText("00:00");
-            }
-        }.start();
-    }
     @Override
     public void onBackPressed() {
         if (fullScreen) {
@@ -184,6 +198,7 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            countDownTimer.cancel();
                             startActivity(new Intent(getApplicationContext(), waitingcompleteAct.class));
                             finish();
                         }
@@ -194,6 +209,11 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
         }
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     @Override
     public void onInitializationFailure(YouTubePlayer.Provider provider,
@@ -208,15 +228,10 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
         if (!restored) {
             this.youTubePlayer = player;
             callEvents();
-
             this.youTubePlayer.setOnFullscreenListener(new YouTubePlayer.OnFullscreenListener() {
                 @Override
                 public void onFullscreen(boolean NEWfullscreen) {
                     if (NEWfullscreen) {
-                        //HideViews();
-                        //videoWidth = playerView.getLayoutParams().width;
-                        //videoHeight = playerView.getLayoutParams().height;
-                        //playerView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
                         FullScreenLandSpace();
                     } else {
                         MakePlayerFullScreenPortrait();
@@ -237,8 +252,7 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
         outofvideo.setVisibility(View.INVISIBLE);
     }
     private String GetVideoUrl(){
-        //TODO(later) A method which get a url from the database to display to the user
-        return "R7AXBOT8KzU";
+        return videoURL;
     }
     private void callEvents(){
         youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
@@ -260,43 +274,42 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
 
             @Override
             public void onVideoStarted() {
-
                 //Toast.makeText(getApplicationContext(), "Video Started", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onVideoEnded() {
-                ratingAct.timeInSec = timeInSec - 1;
+                ratingAct.total_time = "0";
+                ratingAct.total_score = "0";
+                ratingAct.timeInSec = timeInSec;
+                countDownTimer.cancel();
                 finish();
                 startActivity(new Intent(getApplicationContext(), ratingAct.class));
             }
 
             @Override
             public void onError(YouTubePlayer.ErrorReason errorReason) {
-                Toast.makeText(getApplicationContext(), errorReason.toString(), Toast.LENGTH_SHORT).show();
-//                if(!Internet.isNetworkAvailable(getApplicationContext()))
-//                    Internet.ShowDialog(getApplicationContext());
+                Log.e("VideoPageError",errorReason.toString());
+                if(errorReason == YouTubePlayer.ErrorReason.NOT_PLAYABLE){
+                    playlistInfo.NextInPlaylist(getApplicationContext());
+                }
             }
         });
         youTubePlayer.setPlaybackEventListener(new YouTubePlayer.PlaybackEventListener() {
             @Override
             public void onPlaying() {
-                //Toast.makeText(getApplicationContext(), "Video is playing", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onPaused() {
-                //Toast.makeText(getApplicationContext(), "Video Paused", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onStopped() {
-                //Toast.makeText(getApplicationContext(), "Video Stopped", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onBuffering(boolean b) {
-                //Toast.makeText(getApplicationContext(), "Video Buffering", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -310,5 +323,6 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
     public void onDestroy()
     {
         super.onDestroy();
+        countDownTimer.cancel();
     }
 }

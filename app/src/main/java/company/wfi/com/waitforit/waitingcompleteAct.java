@@ -30,9 +30,6 @@ import org.json.JSONObject;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Created by User on 17/10/2015.
- */
 public class waitingcompleteAct extends Activity implements View.OnClickListener {
 
     ImageButton continuewfi,sharefacebook,ratebtn,set;
@@ -48,7 +45,7 @@ public class waitingcompleteAct extends Activity implements View.OnClickListener
         shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
             @Override
             public void onSuccess(Sharer.Result result) {
-                Toast.makeText(getApplicationContext(),"Thank You for sharing out great work!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Thank You!",Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -87,24 +84,14 @@ public class waitingcompleteAct extends Activity implements View.OnClickListener
                 startActivity(new Intent(this,settingcl.class));
                 break;
             case R.id.ratebutton:
-                Toast.makeText(this,"Thank you!",Toast.LENGTH_SHORT).show();
-                goRating(this);
+                Toast.makeText(this,"Thank you! But this is only a beta version",Toast.LENGTH_SHORT).show();
+                //goRating(this);
                 break;
             case R.id.sharebutton:
                 Toast.makeText(this,"Sharing through Facebook..",Toast.LENGTH_SHORT).show();
                 ShareOnFacebook();
                 break;
             case R.id.conwaiting:
-                //Toast.makeText(this,"Creating another great playlist for you...",Toast.LENGTH_SHORT).show();
-                //try {
-                //    Thread.sleep(2000);
-                //} catch (InterruptedException e) {
-                //    e.printStackTrace();
-                //}
-                //prefs = getSharedPreferences("X", MODE_PRIVATE);
-                //int lastPlaylistTime;
-                //lastPlaylistTime = prefs.getInt("WaitingTime", 600);
-                //videopage.timeInSec = lastPlaylistTime;
                 startActivity(new Intent(this, waitingtime.class));
                 break;
         }
@@ -116,7 +103,7 @@ public class waitingcompleteAct extends Activity implements View.OnClickListener
     private void ShareOnFacebook() {
         if (ShareDialog.canShow(ShareLinkContent.class)) {
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                    .setContentTitle("Wait For It app")
+                    .setContentTitle("Wait For It")
                     .setContentDescription(
                             "Be exposed to the most trending content with - Wait For It!")
                     .setContentUrl(Uri.parse("https://www.facebook.com/waitforitapp/?fref=ts"))
@@ -150,11 +137,15 @@ public class waitingcompleteAct extends Activity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
+        //waitingDetails.ResetCategoryArray();
+        videopage.timeInSec = 0;
+        gameAct.timeInSec = 0;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        playlistInfo.StopPlaylist();
     }
 
     @Override

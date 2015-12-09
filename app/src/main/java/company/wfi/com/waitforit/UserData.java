@@ -39,7 +39,6 @@ public class UserData {
         editor.remove("UserName");
         editor.remove("UserEmail");
         editor.remove("UserBirthday");
-        //TODO remove also list of languages...
         if(prefs.getInt("Session",0) == 1){
             //Google
             firstAct.googleApiClient.disconnect();
@@ -53,23 +52,4 @@ public class UserData {
         editor.putInt("Session", 0);
         editor.commit();
     }
-    //get hash code>
-//        PackageInfo info;
-//        try {
-//            info = getPackageManager().getPackageInfo("company.wfi.com.waitforit", PackageManager.GET_SIGNATURES);
-//            for (Signature signature : info.signatures) {
-//                MessageDigest md;
-//                md = MessageDigest.getInstance("SHA");
-//                md.update(signature.toByteArray());
-//                String something = new String(Base64.encode(md.digest(), 0));
-//                //String something = new String(Base64.encodeBytes(md.digest()));
-//                Log.e("hash key", something);
-//            }
-//        } catch (PackageManager.NameNotFoundException e1) {
-//            Log.e("name not found", e1.toString());
-//        } catch (NoSuchAlgorithmException e) {
-//            Log.e("no such an algorithm", e.toString());
-//        } catch (Exception e) {
-//            Log.e("exception", e.toString());
-//        }
 }

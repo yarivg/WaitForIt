@@ -8,17 +8,25 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class categorypage extends Activity implements View.OnClickListener {
 
+    public String[] categoryNames = new String[constants.NUMOFCATEGORIES];
+
     ImageButton vidoesbtn,gamesbtn,jokesbtn,puzzlebtn,newsbtn,musicbtn,nextbtn,settingbtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choosecategory);
+
+        waitingDetails.ResetCategoryArray();
+        categoryNames[0] = "VIDEOS";categoryNames[1] = "GAMES";
+        categoryNames[2] = "NEWS";categoryNames[3] = "PUZZLES";
+        categoryNames[4] = "JOKES";categoryNames[5] = "MUSIC";
 
         vidoesbtn = (ImageButton)findViewById(R.id.videosbutton);
         gamesbtn = (ImageButton)findViewById(R.id.gamesbutton);
@@ -41,7 +49,7 @@ public class categorypage extends Activity implements View.OnClickListener {
         nextbtn.setOnClickListener(this);
         settingbtn.setOnClickListener(this);
 
-        Internet.ShowScreenGroup(this);
+        //Internet.ShowScreenGroup(this);
     }
 
     private void Check() {
@@ -66,17 +74,20 @@ public class categorypage extends Activity implements View.OnClickListener {
                     vidoesbtn.setImageResource(R.drawable.videos);
                     vidoesbtn.setTag(false);
                 }
+                waitingDetails.categoryArr[0] = vidoesbtn.getTag().equals(true);
                 Check();
                 break;
             case R.id.gamesbutton :
                 if(gamesbtn.getTag().equals(false)) {
                     gamesbtn.setImageResource(R.drawable.gameschecked);
                     gamesbtn.setTag(true);
+
                 }
                 else {
                     gamesbtn.setImageResource(R.drawable.games);
                     gamesbtn.setTag(false);
                 }
+                waitingDetails.categoryArr[1] = gamesbtn.getTag().equals(true);
                 Check();
                 break;
             case R.id.jokesbutton :
@@ -92,7 +103,7 @@ public class categorypage extends Activity implements View.OnClickListener {
                 Toast.makeText(this, "Music Will be available soon!", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nextbuttonnn :
-                startActivity(new Intent(this,placepage.class));
+                startActivity(new Intent(this, placepage.class));
                 break;
             case R.id.settings :
                 SharedPreferences prefs = getSharedPreferences("X", MODE_PRIVATE);
@@ -123,22 +134,30 @@ public class categorypage extends Activity implements View.OnClickListener {
         super.onResume();
         boolean mybool = false;
         SharedPreferences prefs = getSharedPreferences("X", MODE_PRIVATE);
-        try{
-        mybool = prefs.getBoolean("gameChecked",mybool);
-        if(mybool) {
-            this.gamesbtn.setTag(mybool);
-            gamesbtn.setImageResource(R.drawable.gameschecked);
-        }
-        mybool = prefs.getBoolean("videoChecked",mybool);
-        if(mybool) {
-            this.vidoesbtn.setTag(mybool);
-            vidoesbtn.setImageResource(R.drawable.videoschecked);
-        }
-        Check();
-        SharedPreferences.Editor e = prefs.edit();
-        e.remove("videoChecked");
-        e.remove("gameChecked");
-        e.commit();
+        try {
+            mybool = prefs.getBoolean("gameChecked", mybool);
+            if (mybool) {
+                this.gamesbtn.setTag(mybool);
+                gamesbtn.setImageResource(R.drawable.gameschecked);
+                waitingDetails.categoryArr[1] = true;
+            }
+            else{
+                waitingDetails.categoryArr[1] = false;
+            }
+            mybool = prefs.getBoolean("videoChecked", mybool);
+            if (mybool) {
+                this.vidoesbtn.setTag(mybool);
+                vidoesbtn.setImageResource(R.drawable.videoschecked);
+                waitingDetails.categoryArr[0] = true;
+            }
+            else{
+                waitingDetails.categoryArr[0] = false;
+            }
+            Check();
+            SharedPreferences.Editor e = prefs.edit();
+            e.remove("videoChecked");
+            e.remove("gameChecked");
+            e.commit();
         }catch(Exception e){
             e.printStackTrace();
         }

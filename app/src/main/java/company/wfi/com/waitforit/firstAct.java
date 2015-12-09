@@ -41,8 +41,6 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 public class firstAct extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,View.OnClickListener {
-    //TODO check for error - no value for birthday.
-    //TODO check in each screen for 1440x2560 and for density that higher than 520 and than resize the images.
     String registerWay;
     ImageButton google;
     ImageButton facebook;
@@ -54,8 +52,15 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
     CallbackManager callbackManager;
     private AccessTokenTracker mTokenTracker;
 
+    private final String urlRequest = "http://wait4itapp.com/webservice/social_auth.php?";
+    private final String mType = "type";
+    private final String mId = "id";
+    private final String mToken = "token";
+    private final String mFullName = "fullname";
+    private final String mEmail = "email";
+    private final String mBirthday = "birthday";
+    private final String mGender = "gender";
     private static final int RC_SIGN_IN = 9001;
-    private static final String TAG = "My Login App";
     public static GoogleApiClient googleApiClient;
 
     @Override
@@ -80,7 +85,6 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
         //--------------------
         wfi = (ImageButton)findViewById(R.id.wfibutton);
         facebook = (ImageButton)findViewById(R.id.facebookbutton);
-        google = (ImageButton)findViewById(R.id.googlebutton);
         set = (ImageButton)findViewById(R.id.setbtn);
         set.setOnClickListener(this);
         wfi.setOnClickListener(this);
@@ -120,7 +124,7 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
                 signIn();
             }
         });
-        Internet.ShowScreenGroup(this);
+        //Internet.ShowScreenGroup(this);
     }
     protected void setGooglePlusButtonText(SignInButton signInButton,
                                            String buttonText) {
@@ -145,8 +149,6 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
                 editor.putString("lastActivityforDev", String.valueOf(firstAct.class.getName()));
                 editor.commit();
                 startActivity(new Intent(this,devPage.class));
-                break;
-            case R.id.googlebutton:
                 break;
             case R.id.facebookbutton:
                 (findViewById(R.id.sign_in_button)).setClickable(false);
@@ -210,16 +212,17 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if(registerWay.equals("google")) {
-            if (requestCode == RC_SIGN_IN) {
-                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-                handleSignInResult(result);
-                (findViewById(R.id.facebookbutton)).setClickable(true);
+        if(registerWay != null) {
+            if (registerWay.equals("google")) {
+                if (requestCode == RC_SIGN_IN) {
+                    GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+                    handleSignInResult(result);
+                    (findViewById(R.id.facebookbutton)).setClickable(true);
+                }
+            } else if (registerWay.equals("facebook")) {
+                callbackManager.onActivityResult(requestCode, resultCode, data);
+                (findViewById(R.id.sign_in_button)).setClickable(true);
             }
-        }
-        else if(registerWay.equals("facebook")){
-            callbackManager.onActivityResult(requestCode, resultCode, data);
-            (findViewById(R.id.sign_in_button)).setClickable(true);
         }
     }
 
@@ -239,22 +242,40 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
             if (personToken != null)
                 editor.putString("UserToken", personToken);
             else
-                editor.putString("UserToken", idToken);
+                editor.putString("UserToken", "0");
             // TODO(user): send token to server and validate server-side
             editor.putInt("Session", 1);
             editor.commit();
-            //String x1 = acct.zzmw();
-            //Set<Scope> myScopes = acct.getGrantedScopes();//2,4
+
+            SendSignInDetails("google",personId,personToken,personName,personEmail,"0","0");
+            //TODO get gender for google sign in
+
             Toast.makeText(this, String.valueOf("Connected Successfully!"), Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, categorypage.class));
-
-            //updateUI(true);
         } else {
-            // Signed out, show unauthenticated UI.
-            //updateUI(false);
+            // Signed out
             signOut();
-            Toast.makeText(this, "ID Token: null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please sign in again", Toast.LENGTH_SHORT).show();
         }
+    }
+    private void SendSignInDetails(String site, String personId,String personToken,String personName,String personEmail,String personBirthday,String personGender){
+        String myRequest = urlRequest+mType+"=" + site + "&" + mId + "=" + personId + "&" +mToken + "=" + personToken +"&" +mFullName +"=" + personName + "&" + mEmail +"=" +personEmail + "&" + mBirthday + "=" + personBirthday + "&" + mGender + "=" + personGender;
+        myRequest = myRequest.replace(" ","_");
+        mAsyncTaskforString mAsyncTaskforString = (company.wfi.com.waitforit.mAsyncTaskforString) new mAsyncTaskforString(new mAsyncTaskforString.AsyncResponse() {
+            @Override
+            public void processFinish(String str) {
+                prefs = getSharedPreferences("X", MODE_PRIVATE);
+                String mUserID = prefs.getString("UserId","-1");
+                if(str.equals("exists")){
+                    //sign in complete
+
+                }
+                else if(str.equals(mUserID)){
+                    //Registeration complete
+                }
+            }
+        }).execute(myRequest);
+
     }
     private void signOut() {
         Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
@@ -276,50 +297,49 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>(){
             @Override
             public void onSuccess(LoginResult loginResult) {
-                if(!AccessToken.getCurrentAccessToken().getDeclinedPermissions().contains("birthday")) {
-                    final AccessToken accessToken = loginResult.getAccessToken();
-                    //TODO Check if access token exist in database.
-                    Toast.makeText(getApplicationContext(), "Successfull login.", Toast.LENGTH_SHORT).show();
-                    GraphRequest request = GraphRequest.newMeRequest(
-                            accessToken,
-                            new GraphRequest.GraphJSONObjectCallback() {
-                                @Override
-                                public void onCompleted(
-                                        JSONObject object,
-                                        GraphResponse response) {
-                                    // Application code
+                final AccessToken accessToken = loginResult.getAccessToken();
+                Toast.makeText(getApplicationContext(), "Successfull login.", Toast.LENGTH_SHORT).show();
+                GraphRequest request = GraphRequest.newMeRequest(
+                        accessToken,
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(
+                                    JSONObject object,
+                                    GraphResponse response) {
+                                // Application code
+                                try {
+                                    String birthday, email;
+                                    String id = object.getString("id");
+                                    String name = object.getString("name");
+                                    String gender = object.getString("gender");
                                     try {
-                                        String birthday, email;
-                                        String id = object.getString("id");
-                                        String name = object.getString("name");
-                                        try {
-                                            email = object.getString("email");
-                                        } catch (NullPointerException e) {
-                                            email = "nomail";
-                                        }
-                                        try {
-                                            birthday = object.getString("birthday");
-                                        } catch (NullPointerException e) {
-                                            birthday = "-1";
-                                        }
-                                        UserData.SaveUserData(getApplicationContext(), String.valueOf(accessToken.getToken()), id, name, email, birthday,null);
-                                        startActivity(new Intent(getApplicationContext(), categorypage.class));
+                                        email = object.getString("email");
+                                    } catch (NullPointerException e) {
+                                        email = "-1";
                                     } catch (JSONException e) {
-                                        e.printStackTrace();
-                                        Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                                        email = "-1";
                                     }
+                                    try {
+                                        birthday = object.getString("birthday");
+                                    } catch (NullPointerException e) {
+                                        birthday = "-1";
+                                    } catch (JSONException e) {
+                                        birthday = "-1";
+                                    }
+                                    SendSignInDetails("facebook",id,accessToken.getToken(),name,email,birthday,gender);
+                                    UserData.SaveUserData(getApplicationContext(), String.valueOf(accessToken.getToken()), id, name, email, birthday, null);
+                                    startActivity(new Intent(getApplicationContext(), categorypage.class));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
                                 }
-                            });
-                    Bundle parameters = new Bundle();
-                    parameters.putString("fields", "id,name,email,birthday");
-                    request.setParameters(parameters);
-                    request.executeAsync();
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "We need to get your age to provide you optimized content.", Toast.LENGTH_LONG).show();
-                    //TODO option1 : LoginManager.getInstance().logInWithReadPermissions(firstAct.this, Arrays.asList("birthday"));
-                    //option2 : my own dialog which gets birthday.
-                }
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email,gender,birthday");
+                request.setParameters(parameters);
+                request.executeAsync();
+                //startActivity(new Intent(getApplicationContext(), categorypage.class));
             }
 
             @Override

@@ -6,19 +6,20 @@
 
 
     <ImageButton
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:id="@+id/outofvideopage"
+        android:layout_width="50dp"
+        android:layout_height="42dp"
+        android:id="@+id/exitplaylistbtn"
         android:layout_gravity="left|top"
         android:scaleType="fitXY"
         android:src="@drawable/exitplaylist"
         android:background="@android:color/transparent"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="7dp" />
 
     <com.google.android.youtube.player.YouTubePlayerView
         android:layout_width="match_parent"
         android:id="@+id/videoview"
-        android:layout_height="590dp"
+        android:layout_height="505dp"
         android:layout_gravity="center|bottom" />
 
     <TextView
@@ -28,8 +29,8 @@
         android:text="00:00"
         android:id="@+id/timertxt"
         android:layout_gravity="right|top"
-        android:textSize="30dp"
+        android:textSize="28dp"
         android:textColor="#ffffff"
-        android:layout_marginRight="22dp"
-        android:layout_marginTop="28dp" />
+        android:layout_marginRight="36dp"
+        android:layout_marginTop="22dp" />
 </FrameLayout>

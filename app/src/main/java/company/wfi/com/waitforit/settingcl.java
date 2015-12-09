@@ -1,8 +1,5 @@
 package company.wfi.com.waitforit;
 
-/**
- * Created by User on 19/10/2015.
- */
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -33,9 +30,6 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareButton;
 import com.facebook.share.widget.ShareDialog;
 
-/**
- * Created by User on 17/10/2015.
- */
 public class settingcl extends Activity implements View.OnClickListener {
 
     int session;
@@ -104,7 +98,8 @@ public class settingcl extends Activity implements View.OnClickListener {
                 startActivity(new Intent(this,devPage.class));
                 break;
             case R.id.rateusbtn:
-                goRating(this);
+                Toast.makeText(this,"Thank you! But this is only a beta version",Toast.LENGTH_SHORT).show();
+                //goRating(this);
                 break;
             case R.id.sharefacebookbtn:
                 ShareOnFacebook();
@@ -158,7 +153,7 @@ public class settingcl extends Activity implements View.OnClickListener {
         });
         builder.setNegativeButton(negbuttonMessage, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                return;
+
             }
         });
 // Create the AlertDialog

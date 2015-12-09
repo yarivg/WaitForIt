@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -13,11 +15,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 public class Internet {
     public static boolean isNetworkAvailable(final Context context) {
@@ -64,33 +72,5 @@ public class Internet {
         }
     }
 
-    public static JSONObject getJSONofURL(String mUrl){
-        JSONObject object = null;
-        String result = "";
-        try {
-            URL url = new URL(mUrl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.connect();
-            InputStreamReader isReader = new InputStreamReader(conn.getInputStream());
-            //put output stream into a string
-            BufferedReader br = new BufferedReader(isReader );
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                Log.d("mAsyncTask", line);
-                result += line;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try{//Converting result String to JSON OBJECT
-            object = new JSONObject(result);
 
-        }catch(JSONException e){
-            e.printStackTrace();
-            Log.e("My App", "Could not parse malformed JSON: \"" + result + "\"");
-        }
-        return object;
-    }
 }

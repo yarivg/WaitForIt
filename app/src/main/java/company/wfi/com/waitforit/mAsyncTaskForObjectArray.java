@@ -1,24 +1,19 @@
 package company.wfi.com.waitforit;
 
-import android.media.audiofx.BassBoost;
 import android.os.AsyncTask;
-import android.provider.Settings;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
-
-public class mAsyncTask extends AsyncTask<String,String,JSONObject>{
+public class mAsyncTaskForObjectArray extends AsyncTask<String, String, JSONArray> {
     /*Params-
         (first)The doInBackground gets it.
         (second)onProgressDialog gets it.
@@ -26,12 +21,13 @@ public class mAsyncTask extends AsyncTask<String,String,JSONObject>{
     */
 
     /*An interface to get the response of onPostExecute*/
-    public interface AsyncResponse{
-        void processFinish(JSONObject object);
+    public interface AsyncResponse {
+        void processFinish(JSONArray array);
     }
+
     public AsyncResponse delegate = null;
 
-    public mAsyncTask(AsyncResponse delegate){
+    public mAsyncTaskForObjectArray(AsyncResponse delegate) {
         this.delegate = delegate;
     }
 
@@ -42,10 +38,9 @@ public class mAsyncTask extends AsyncTask<String,String,JSONObject>{
         super.onPreExecute();
     }
 
-
     @Override
-    protected JSONObject doInBackground(String... params) {
-        JSONObject object = null;
+    protected JSONArray doInBackground(String... params) {
+        JSONArray array = null;
         String mURL = params[0];
         try {
             URL url = new URL(mURL);
@@ -54,30 +49,32 @@ public class mAsyncTask extends AsyncTask<String,String,JSONObject>{
             conn.connect();
             InputStreamReader isReader = new InputStreamReader(conn.getInputStream());
             //put output stream into a string
-            BufferedReader br = new BufferedReader(isReader );
-            StringBuilder sb = new StringBuilder();
+            BufferedReader br = new BufferedReader(isReader);
             String line;
             while ((line = br.readLine()) != null) {
                 Log.d("mAsyncTask", line);
                 result += line;
             }
-            result = result.replace("[","");
-            result = result.replace("]","");
+            result = result.replace("[", "");
+            result = result.replace("]", "");
+            result = "[" + result + "]";
+            result = result.replaceAll("<pre>", "");
+            result = result.replaceAll("</pre>","");
 
-            object = new JSONObject(result);
-        } catch (IOException e) {
+            array = new JSONArray(result);
+            } catch (IOException e) {
             e.printStackTrace();
-            Log.e("WAITFORIT","ERROR AT CONNECTION");
-        }catch (JSONException e){
+            Log.e("WAITFORIT", "ERROR AT CONNECTION");
+        } catch (JSONException e) {
             e.printStackTrace();
             Log.e("WAITFORIT", "ERROR AT parsing string to jsonobjcet");
         }
-        return object;
+        return array;
     }
 
     @Override
-    protected void onPostExecute(JSONObject object) {
+    protected void onPostExecute(JSONArray array) {
         //super.onPostExecute(object);
-        delegate.processFinish(object);
+        delegate.processFinish(array);
     }
 }

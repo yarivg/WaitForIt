@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.Bitmap;
+import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Base64;
@@ -28,43 +31,91 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Created by User on 17/10/2015.
- */
 public class discriptionAct extends Activity implements View.OnClickListener {
-    //TODO(later) change this page and get pic of a game
     ImageButton playgame,settingpage;
+    private static String gameTitleStr,gameDiscriptionStr;
+    private final String requestURL = "http://wait4itapp.com/";
+    public static String currentGameId = "1243";
+    private final String getRequest = "http://www.wait4itapp.com/webservice/game_request.php?id=";
     public static int timeInSec = 0;
     private TextView timer;
     private static final int toMINUTE = 1000;
-    ImageView gameTitle,gamediscription,gamePic;
+    TextView gameTitle,gamediscription;
+    ImageView gamePic;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAsyncTask mAsyncTask = (company.wfi.com.waitforit.mAsyncTask) new mAsyncTask(new mAsyncTask.AsyncResponse() {
+            @Override
+            public void processFinish(JSONObject object) {
+                try {
+                    String name = object.getString("name");
+                    name = name.replaceAll("\r\n", "");
+                    String instruction = object.getString("instruction");
+                    instruction = instruction.replaceAll("\r\n", "");
+                    String pic = object.getString("pic");
+                    pic = pic.replaceAll("\r\n", "");
+                    pic = pic.replace("\\", "/");
+                    gameTitleStr = name;
+                    gameDiscriptionStr = instruction;
+                    mAsyncTaskforBitmap mAsyncTaskforBitmap = (mAsyncTaskforBitmap)new mAsyncTaskforBitmap(new mAsyncTaskforBitmap.AsyncResponse(){
+                        @Override
+                        public void processFinish(Bitmap bitmap) {
+                            gamePic.setImageBitmap(bitmap);
+                            gamePic.setVisibility(View.VISIBLE);
+                            playgame.setVisibility(View.VISIBLE);
+                            playgame.setClickable(true);
+                            gameTitle.setText(gameTitleStr);
+                            gamediscription.setText(gameDiscriptionStr);
+                        }
+                    }).execute(requestURL + pic);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).execute(getRequest+currentGameId);
         setContentView(R.layout.gamediscription);
+
+        //Typeface fontTitle = Typeface.createFromAsset(getAssets(),"fonts/Dense-Regular.otf");
+        Typeface fontTimer = Typeface.createFromAsset(getAssets(),"fonts/Ailerons.ttf");
 
         timer = (TextView) findViewById(R.id.timertxt);
         playgame = (ImageButton) findViewById(R.id.playgamebutton);
-        settingpage = (ImageButton) findViewById(R.id.exitdisxription);
+        settingpage = (ImageButton) findViewById(R.id.exitplaylistbtn);
+        gameTitle = (TextView)findViewById(R.id.gametitle);
+        timer.setTypeface(fontTimer);
+        gamediscription = (TextView)findViewById(R.id.discription);
+        gamePic = (ImageView)findViewById(R.id.gameimage);
         playgame.setOnClickListener(this);
         settingpage.setOnClickListener(this);
-        StartTimer();
-    }
 
+        StartThisClock();
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.playgamebutton:
-                gameAct.timeInSec = timeInSec - 1;
-                //TODO(later) send the user to the right game
-                startActivity(new Intent(this,gameAct.class));
+                String currentUrl = playlistInfo.mPlaylist.get(playlistInfo.indexInList).getUrl();
+                gameAct.timeInSec = timeInSec;
+                Intent intent = new Intent(getApplicationContext(),gameAct.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                gameAct.loadNewGame = true;
+                gameAct.firstJS = true;
+                startActivity(intent);
+
                 break;
-            case R.id.exitdisxription:
+            case R.id.exitplaylistbtn:
                 new AlertDialog.Builder(this)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle("Exiting Playlist")
@@ -80,6 +131,29 @@ public class discriptionAct extends Activity implements View.OnClickListener {
                         .show();
                 break;
         }
+    }
+    private void StartThisClock() {
+        Thread t = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                timer.setText(myClock.getTimeText());
+                            }
+                        });
+                        Thread.sleep(1000);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        t.start();
     }
     public void StartTimer() {
         //A function which starts the timer or continue it

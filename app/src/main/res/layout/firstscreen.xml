@@ -4,6 +4,7 @@
 
 
     <ImageButton
+        android:scaleType="fitXY"
         android:layout_marginTop="25dp"
         android:src="@drawable/facebook"
         android:layout_width="317dp"
@@ -16,7 +17,7 @@
 
     <ImageButton
         android:layout_marginTop="215dp"
-        android:src="@drawable/wfibutton"
+        android:src="@drawable/about"
         android:layout_width="317dp"
         android:layout_height="75dp"
         android:id="@+id/wfibutton"

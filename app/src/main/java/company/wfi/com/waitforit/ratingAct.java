@@ -4,29 +4,42 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-/**
- * Created by User on 05/11/2015.
- */
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class ratingAct extends Activity implements View.OnClickListener {
 
     ImageButton sababa,notSababa,goSetting,otherView;
-    Thread thread;
+    SharedPreferences prefs;
+    String rateValue;
+    final String urlReqest = "http://www.wait4itapp.com/webservice/mark_object.php?";
+    final String objectId = "object_id";
+    final String userId= "user_id";
+    final String likeStatus = "like_status";
+    final String mTotalTime = "total_time";
+    final String mTotalScore = "total_score";
 
-
+    public static String total_time;
+    public static String total_score;
     public static int timeInSec = 0;
     private TextView timer;
     private static final int toMINUTE = 1000;
+    private long mLastClickTime = 0;
     //Other View variable contains the reference to the button that needs to be gone slowly
 
     @Override
@@ -36,26 +49,34 @@ public class ratingAct extends Activity implements View.OnClickListener {
         timer = (TextView)findViewById(R.id.timertxt);
         sababa = (ImageButton)findViewById(R.id.sabababutton);
         notSababa = (ImageButton)findViewById(R.id.notsabababutton);
-        goSetting = (ImageButton)findViewById(R.id.backbuttoninrating);
+        goSetting = (ImageButton)findViewById(R.id.exitplaylistbtn);
         sababa.setOnClickListener(this);
         notSababa.setOnClickListener(this);
         goSetting.setOnClickListener(this);
-        StartTimer();
+        Typeface fontTimer = Typeface.createFromAsset(getAssets(),"fonts/Ailerons.ttf");
+        timer.setTypeface(fontTimer);
+        StartThisClock();
     }
     @Override
     public void onClick(View view) {
+        //Preventing multiple clicks,Using hold of 1 second
+        if(SystemClock.elapsedRealtime() - mLastClickTime < 1000)
+            return;
+        mLastClickTime = SystemClock.elapsedRealtime();
         switch (view.getId()){
             case R.id.sabababutton:
+                notSababa.setClickable(false);
+                rateValue = "1";
                 sababa.setImageResource(R.drawable.mysababa);
                 otherView = notSababa;
                 otherView.setImageAlpha(50);
-                //TODO(later) make a http request as sababa of the video/game
                 break;
             case R.id.notsabababutton:
+                sababa.setClickable(false);
+                rateValue = "-1";
                 notSababa.setImageResource(R.drawable.mynotsababa);
                 otherView = sababa;
                 otherView.setImageAlpha(50);
-                //TODO(later) make a http request as not sababa of the video/game
                 break;
             case R.id.backbuttoninrating:
                 new AlertDialog.Builder(this)
@@ -74,32 +95,61 @@ public class ratingAct extends Activity implements View.OnClickListener {
                 break;
         }
         if(view.getId() != R.id.backbuttoninrating) {
-            if(timeInSec > 15) {
-                discriptionAct.timeInSec = timeInSec - 1;
-                gameAct.timeInSec = timeInSec - 1;
-                myAsyncTask myTask = new myAsyncTask();
-                myTask.doInBackground();
+            SendRateToServer();
+            if(myClock.timeLeftSec > 15) {
+                discriptionAct.timeInSec = timeInSec;
+                gameAct.timeInSec = timeInSec;
+                videopage.timeInSec = timeInSec ;
+                playlistInfo.NextInPlaylist(this);
             }
             else{
                 startActivity(new Intent(getApplicationContext(), waitingcompleteAct.class));
             }
         }
-            //for(otherView.setImageAlpha(255);otherView.getImageAlpha() >= 30;otherView.setImageAlpha(otherView.getImageAlpha() - 10)) {
-            //   myTask.doInBackground(otherView.getImageAlpha());
-            //}
-            //thisView = (FrameLayout.LayoutParams)view.getLayoutParams();
-            //thisView.height = view.getHeight() +20;
-            //thisView.width = view.getWidth() +10;
-            //view.setLayoutParams(thisView);
-            //startActivity(new Intent(this, gameAct.class));
     }
+    private void StartThisClock() {
+        Thread t = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                timer.setText(myClock.getTimeText());
+                            }
+                        });
+                        Thread.sleep(1000);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        t.start();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        sababa.setImageAlpha(255);
-        notSababa.setImageAlpha(255);
-        sababa.setImageResource(R.drawable.sababa);
-        notSababa.setImageResource(R.drawable.notsababa);
+    }
+    private void SendRateToServer(){
+        prefs = getSharedPreferences("X",MODE_PRIVATE);
+        String mUserId = prefs.getString("UserId", "0");
+        String mObjectId = playlistInfo.mPlaylist.get(playlistInfo.indexInList).getId();
+        String fullRequest = urlReqest + objectId + "=" + mObjectId + "&" + userId + "=" + mUserId + "&" + likeStatus + "=" + rateValue + "&" + mTotalTime + "=" + total_time + "&" + mTotalScore + "=" + total_score;
+        mAsyncTaskforString mAsyncTastforString = (company.wfi.com.waitforit.mAsyncTaskforString) new mAsyncTaskforString(new mAsyncTaskforString.AsyncResponse() {
+            @Override
+            public void processFinish(String str) {
+                prefs = getSharedPreferences("X",MODE_PRIVATE);
+                String mUserId = prefs.getString("UserId", "-1");
+                if(mUserId.equals(str)){
+                    Log.d("ratingAct","Send Rating Succeed.");
+                }
+            }
+        }).execute(fullRequest);
     }
     @Override
     public void onBackPressed() {

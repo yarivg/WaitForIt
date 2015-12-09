@@ -22,7 +22,7 @@
         android:layout_gravity="right|top"
         android:textSize="32dp"
         android:textColor="#ffffff"
-        android:layout_marginRight="30dp"
+        android:layout_marginRight="28dp"
         android:layout_marginTop="32dp" />
     <ImageButton
         android:src="@drawable/notsababa"

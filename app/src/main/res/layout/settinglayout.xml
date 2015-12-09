@@ -17,7 +17,7 @@
 
     <ImageButton
         android:background="@android:color/transparent"
-        android:src="@drawable/about"
+        android:src="@drawable/wfibutton"
         android:layout_width="340dp"
         android:layout_height="55dp"
         android:id="@+id/aboutbtn"
@@ -54,7 +54,6 @@
         android:layout_height="55dp"
         android:id="@+id/rateusbtn"
         android:layout_gravity="center"
-        android:onClick="onclick"
         android:scaleType="fitXY"
         android:layout_marginBottom="50dp" />
 

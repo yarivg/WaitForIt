@@ -17,7 +17,6 @@ public class setdefulattimeact extends Activity implements View.OnClickListener 
     private static final int  SIZEOFARRAY = 14;
     private ImageButton minus,plus,imageTime,done,setting;
     private int index;
-    private int[] arr2 = new int[SIZEOFARRAY];
     private int[] arr = new int[SIZEOFARRAY];
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
@@ -39,12 +38,6 @@ public class setdefulattimeact extends Activity implements View.OnClickListener 
         done.setOnClickListener(this);
         setting.setOnClickListener(this);
         index = 1;
-
-        arr2[0] = 1; arr2[1] = 2; arr2[2] = 3; arr2[3] = 4;
-        arr2[4] = 5; arr2[5] = 6; arr2[6] = 7; arr2[7] = 8;
-        arr2[8] = 9; arr2[9] = 10; arr2[10] = 15;
-        arr2[11] = 20; arr2[12] = 25; arr2[13] = 30;
-
         arr[0] = R.drawable.min1; arr[1] = R.drawable.min2; arr[2] = R.drawable.min3; arr[3] = R.drawable.min4;
         arr[4] = R.drawable.min5; arr[5] = R.drawable.min6; arr[6] = R.drawable.min7; arr[7] = R.drawable.min8;
         arr[8] = R.drawable.min9; arr[9] = R.drawable.min10; arr[10] = R.drawable.min15;
@@ -82,6 +75,8 @@ public class setdefulattimeact extends Activity implements View.OnClickListener 
             case R.id.donebtn:
                 prefs = getSharedPreferences("X", MODE_PRIVATE);
                 editor = prefs.edit();
+                editor.remove("defaultTimeIndex");
+                editor.apply();
                 editor.putInt("defaultTimeIndex", index);
                 editor.commit();
                 Toast.makeText(this,"Default Time Was Saved Successfully!",Toast.LENGTH_SHORT).show();

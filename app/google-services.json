@@ -1,1 +1,51 @@
-{"project_info":{"project_id":"wait-for-it-2e8e6","project_number":"733464209248","name":"Wait For It"},"client":[{"client_info":{"mobilesdk_app_id":"1:733464209248:android:9c6060fbf3ad94e4","client_id":"android:company.wfi.com.waitforit","client_type":1,"android_client_info":{"package_name":"company.wfi.com.waitforit"}},"oauth_client":[{"client_id":"733464209248-37tsrj94vkd1v8np2u8uu0salkp3d5lr.apps.googleusercontent.com","client_type":1,"android_info":{"package_name":"company.wfi.com.waitforit","certificate_hash":"0C9A2C76889FAD14FB2FDA1C89D2E9AAEE533440"}}],"api_key":[],"services":{"analytics_service":{"status":1},"cloud_messaging_service":{"status":1,"apns_config":[]},"appinvite_service":{"status":1,"other_platform_oauth_client":[]},"google_signin_service":{"status":2},"ads_service":{"status":1}}}],"client_info":[],"ARTIFACT_VERSION":"1"}
+{
+  "project_info": {
+    "project_id": "wait-for-it-2e8e6",
+    "project_number": "733464209248",
+    "name": "Wait For It"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733464209248:android:9c6060fbf3ad94e4",
+        "client_id": "android:company.wfi.com.waitforit",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "company.wfi.com.waitforit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733464209248-asj3hvlbkkkg21oatrq26vfuginl369r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "company.wfi.com.waitforit",
+            "certificate_hash": "56A57E5233C9012EF5312534E414D8BAE64702FD"
+          }
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
