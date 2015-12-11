@@ -79,17 +79,22 @@ public class setdefulattimeact extends Activity implements View.OnClickListener 
                 editor.apply();
                 editor.putInt("defaultTimeIndex", index);
                 editor.commit();
-                Toast.makeText(this,"Default Time Was Saved Successfully!",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,"Default Time Was Saved Successfully!",Toast.LENGTH_SHORT).show();
                 if(prefs.getInt("Session",0) == 0) {
                     startActivity(new Intent(this, firstAct.class));
                 }
-                else
-                    startActivity(new Intent(this, categorypage.class));
+                else{
+                    Intent i2 = new Intent(getApplicationContext(),categorypage.class);
+                    i2.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    startActivity(i2);
+                }
                 finish();
             case R.id.waitingtime:
                 break;
             case R.id.settings:
-                startActivity(new Intent(this, settingcl.class));
+                Intent i = new Intent(getApplicationContext(),settingcl.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(i);
                 break;
         }
     }

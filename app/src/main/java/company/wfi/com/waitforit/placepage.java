@@ -102,6 +102,7 @@ public class placepage extends Activity implements View.OnClickListener {
                     Intent mIntent = new Intent(this, waitingtime.class);
                     mIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(mIntent);
+                    finish();
                 }
                 break;
             case R.id.settings1:
@@ -109,12 +110,16 @@ public class placepage extends Activity implements View.OnClickListener {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("lastActivity", String.valueOf(placepage.class.getName()));
                 editor.apply();
-                startActivity(new Intent(this,settingcl.class));
+                Intent i = new Intent(getApplicationContext(),settingcl.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(i);
+                finish();
                 break;
             case R.id.previousbutton:
                 Intent mIntent = new Intent(this, categorypage.class);
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(mIntent);
+                finish();
                 break;
             }
     }
@@ -127,10 +132,11 @@ public class placepage extends Activity implements View.OnClickListener {
         Intent mIntent = new Intent(this, waitingtime.class);
         mIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(mIntent);
+        finish();
     }
     @Override
     public void onBackPressed() {
-        Toast.makeText(this,"Back button is currently disabled.",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"Back button is currently disabled.",Toast.LENGTH_SHORT).show();
     }
     @Override
     protected void onPause() {

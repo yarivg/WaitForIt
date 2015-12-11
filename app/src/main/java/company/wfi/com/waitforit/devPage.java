@@ -49,6 +49,7 @@ public class devPage extends Activity implements View.OnClickListener {
                     startActivity(new Intent(this,firstAct.class));
                 else
                     startActivity(new Intent(this,settingcl.class));
+                finish();
                 break;
         }
     }

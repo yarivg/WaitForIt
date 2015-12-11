@@ -103,7 +103,10 @@ public class categorypage extends Activity implements View.OnClickListener {
                 Toast.makeText(this, "Music Will be available soon!", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nextbuttonnn :
-                startActivity(new Intent(this, placepage.class));
+                Intent i = new Intent(getApplicationContext(),placepage.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(i);
+                finish();
                 break;
             case R.id.settings :
                 SharedPreferences prefs = getSharedPreferences("X", MODE_PRIVATE);
@@ -111,6 +114,7 @@ public class categorypage extends Activity implements View.OnClickListener {
                 editor.putString("lastActivity", String.valueOf(categorypage.class.getName()));
                 editor.commit();
                 startActivity(new Intent(this,settingcl.class));
+                finish();
                 break;
         }
     }

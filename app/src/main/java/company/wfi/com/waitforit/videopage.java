@@ -46,37 +46,18 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
     private static final int toMINUTE = 1000;
     public static int timeInSec = 0;
     private YouTubePlayerView playerView;
-    final CountDownTimer countDownTimer = new CountDownTimer(timeInSec*toMINUTE, 1000) {//CountDownTimer(edittext1.getText()+edittext2.getText()) also parse it to long
-        public void onTick(long millisUntilFinished) {
-            if (millisUntilFinished / 1000 / 60 >= 10) {
-                if (millisUntilFinished / 1000 % 60 >= 10)
-                    timer.setText(String.valueOf(millisUntilFinished / 1000 / 60 + ":" + millisUntilFinished / 1000 % 60));
-                else
-                    timer.setText(String.valueOf(millisUntilFinished / 1000 / 60 + ":0" + millisUntilFinished / 1000 % 60));
-            } else {
-                if (millisUntilFinished / 1000 % 60 >= 10)
-                    timer.setText("0" + String.valueOf(millisUntilFinished / 1000 / 60 + ":" + millisUntilFinished / 1000 % 60));
-                else
-                    timer.setText("0" + String.valueOf(millisUntilFinished / 1000 / 60 + ":0" + millisUntilFinished / 1000 % 60));
-            }
-            timeInSec = (int) millisUntilFinished / 1000;
-            timeInAct++;
-        }
 
-        public void onFinish() {
-            timer.setText("00:00");
-        }};
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d("videopage","OnStart");
+        //Log.d("videopage","OnStart");
     }
     private Thread mThread;
     private YouTubePlayer youTubePlayer;
     private boolean fullScreen;
     private int height,width;
     private TextView timer;
-    private ImageButton outofvideo;
+    private ImageButton outofvideo,skipVideo;
     private int topMarginTimer,heightTimer = 80;
     private int timeInAct = 0;
     public static String videoURL = "";
@@ -90,6 +71,16 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+        skipVideo = (ImageButton)findViewById(R.id.skipvideo);
+        skipVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ratingAct.total_time = "0";
+                ratingAct.total_score = "0";
+                finish();
+                startActivity(new Intent(getApplicationContext(), ratingAct.class));
             }
         });
         timer = (TextView)findViewById(R.id.timertxt);
@@ -113,7 +104,6 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
             }
         });
         MakePlayerFullScreenPortrait();
-        //countDownTimer.start();
         StartThisClock();
     }
 
@@ -198,7 +188,6 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            countDownTimer.cancel();
                             startActivity(new Intent(getApplicationContext(), waitingcompleteAct.class));
                             finish();
                         }
@@ -218,7 +207,7 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
     @Override
     public void onInitializationFailure(YouTubePlayer.Provider provider,
                                         YouTubeInitializationResult result) {
-        Toast.makeText(this, getString(R.string.failed), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, getString(R.string.failed), Toast.LENGTH_LONG).show();
         timer.setY(timer.getY() + 5);
     }
 
@@ -281,15 +270,13 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
             public void onVideoEnded() {
                 ratingAct.total_time = "0";
                 ratingAct.total_score = "0";
-                ratingAct.timeInSec = timeInSec;
-                countDownTimer.cancel();
                 finish();
                 startActivity(new Intent(getApplicationContext(), ratingAct.class));
             }
 
             @Override
             public void onError(YouTubePlayer.ErrorReason errorReason) {
-                Log.e("VideoPageError",errorReason.toString());
+                //Log.e("VideoPageError",errorReason.toString());
                 if(errorReason == YouTubePlayer.ErrorReason.NOT_PLAYABLE){
                     playlistInfo.NextInPlaylist(getApplicationContext());
                 }
@@ -323,6 +310,5 @@ public class videopage extends YouTubeBaseActivity implements YouTubePlayer.OnIn
     public void onDestroy()
     {
         super.onDestroy();
-        countDownTimer.cancel();
     }
 }

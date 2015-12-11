@@ -113,7 +113,7 @@ public class discriptionAct extends Activity implements View.OnClickListener {
                 gameAct.loadNewGame = true;
                 gameAct.firstJS = true;
                 startActivity(intent);
-
+                finish();
                 break;
             case R.id.exitplaylistbtn:
                 new AlertDialog.Builder(this)
@@ -123,7 +123,10 @@ public class discriptionAct extends Activity implements View.OnClickListener {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(getApplicationContext(), waitingcompleteAct.class));
+                                Intent i = new Intent(getApplicationContext(),waitingcompleteAct.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivity(i);
+                                finish();
                             }
 
                         })

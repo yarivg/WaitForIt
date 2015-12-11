@@ -54,7 +54,7 @@ public class mAsyncTaskforBitmap extends AsyncTask<String,String,Bitmap> {
             bis.close();
             is.close();
         } catch (IOException e) {
-            Log.e("Internet", "Error getting bitmap", e);
+            //Log.e("Internet", "Error getting bitmap", e);
         }
         return bm;
     }

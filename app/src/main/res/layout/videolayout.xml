@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/bigsizeingame"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/finalbackingame"
     tools:context=".videopage">
 
-
     <ImageButton
-        android:layout_width="50dp"
-        android:layout_height="42dp"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
         android:id="@+id/exitplaylistbtn"
         android:layout_gravity="left|top"
         android:scaleType="fitXY"
-        android:src="@drawable/exitplaylist"
+        android:src="@drawable/finalexit"
         android:background="@android:color/transparent"
-        android:layout_marginLeft="7dp"
-        android:layout_marginTop="7dp" />
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="2dp" />
+    <ImageButton
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:id="@+id/skipvideo"
+        android:layout_gravity="left|top"
+        android:scaleType="fitXY"
+        android:src="@drawable/finalskip"
+        android:background="@android:color/transparent"
+        android:layout_marginLeft="90dp"
+        android:layout_marginTop="2dp" />
 
     <com.google.android.youtube.player.YouTubePlayerView
         android:layout_width="match_parent"

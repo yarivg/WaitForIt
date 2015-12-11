@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@drawable/bigsizeingame"
+    android:background="@drawable/finalbackingame"
     tools:context=".videopage">
 
     <TextView
@@ -17,14 +17,35 @@
         android:layout_marginRight="30dp"
         android:layout_marginTop="22dp" />
     <ImageButton
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:id="@+id/pausegame"
         android:layout_gravity="left|top"
         android:scaleType="fitXY"
-        android:src="@drawable/pausegame"
+        android:src="@drawable/finalstop"
         android:background="@android:color/transparent"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginLeft="140dp"
+        android:layout_marginTop="2dp" />
+    <ImageButton
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:id="@+id/exitplalistbtn"
+        android:layout_gravity="left|top"
+        android:scaleType="fitXY"
+        android:src="@drawable/finalexit"
+        android:background="@android:color/transparent"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="2dp" />
+    <ImageButton
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:id="@+id/skipgame"
+        android:layout_gravity="left|top"
+        android:scaleType="fitXY"
+        android:src="@drawable/finalskip"
+        android:background="@android:color/transparent"
+        android:layout_marginLeft="90dp"
+        android:layout_marginTop="2dp" />
     <WebView
         android:layout_width="fill_parent"
         android:layout_height="509dp"

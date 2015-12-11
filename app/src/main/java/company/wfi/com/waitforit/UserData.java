@@ -7,6 +7,8 @@ import android.util.Log;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 import java.util.List;
 
@@ -41,13 +43,14 @@ public class UserData {
         editor.remove("UserBirthday");
         if(prefs.getInt("Session",0) == 1){
             //Google
-            firstAct.googleApiClient.disconnect();
-            Log.d(TAG,"logged out from google");
+            firstAct.CameFromLogOut = true;
+            //Log.d(TAG,"logged out from google");
         }
         if(prefs.getInt("Session",0) == 2){
             //Facebook
+            firstAct.CameFromLogOut = false;
             LoginManager.getInstance().logOut();
-            Log.d(TAG, "logged out from facebook");
+            //Log.d(TAG, "logged out from facebook");
         }
         editor.putInt("Session", 0);
         editor.commit();

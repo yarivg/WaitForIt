@@ -81,24 +81,30 @@ public class waitingcompleteAct extends Activity implements View.OnClickListener
                 editor = prefs.edit();
                 editor.putString("lastActivity", getClass().getName());
                 editor.commit();
-                startActivity(new Intent(this,settingcl.class));
+                Intent i2 = new Intent(getApplicationContext(),settingcl.class);
+                i2.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(i2);
+                finish();
                 break;
             case R.id.ratebutton:
                 Toast.makeText(this,"Thank you! But this is only a beta version",Toast.LENGTH_SHORT).show();
                 //goRating(this);
                 break;
             case R.id.sharebutton:
-                Toast.makeText(this,"Sharing through Facebook..",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,"Sharing through Facebook..",Toast.LENGTH_SHORT).show();
                 ShareOnFacebook();
                 break;
             case R.id.conwaiting:
-                startActivity(new Intent(this, waitingtime.class));
+                Intent i = new Intent(getApplicationContext(),waitingtime.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(i);
+                finish();
                 break;
         }
     }
     @Override
     public void onBackPressed() {
-        Toast.makeText(this,"Back button is currently disabled here.",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"Back button is currently disabled here.",Toast.LENGTH_SHORT).show();
     }
     private void ShareOnFacebook() {
         if (ShareDialog.canShow(ShareLinkContent.class)) {

@@ -1,5 +1,6 @@
 package company.wfi.com.waitforit;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -31,6 +32,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
@@ -40,7 +42,7 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
-public class firstAct extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,View.OnClickListener {
+public class firstAct extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
     String registerWay;
     ImageButton google;
     ImageButton facebook;
@@ -52,6 +54,7 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
     CallbackManager callbackManager;
     private AccessTokenTracker mTokenTracker;
 
+    public static boolean CameFromLogOut = false;
     private final String urlRequest = "http://wait4itapp.com/webservice/social_auth.php?";
     private final String mType = "type";
     private final String mId = "id";
@@ -88,29 +91,34 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
         set = (ImageButton)findViewById(R.id.setbtn);
         set.setOnClickListener(this);
         wfi.setOnClickListener(this);
-        prefs = getSharedPreferences("X", MODE_PRIVATE);
-        //Session
-        session = prefs.getInt("Session", 0);
-        if(session == 1){
-            Toast.makeText(this, String.valueOf("Connected Successfully through Google!"),Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this,categorypage.class));
-            finish();
-        }
-        else if(session == 2){
-            Toast.makeText(this, String.valueOf("Connected Successfully through Facebook!"),Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this,categorypage.class));
-            finish();
-        }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail().requestScopes(new Scope(Scopes.PLUS_LOGIN)).requestProfile()
                 .build();
+        Log.d("firstAct","onCreate");
+        if(!CameFromLogOut) {
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .addConnectionCallbacks(this)
+                    .build();
+        }
 
+        prefs = getSharedPreferences("X", MODE_PRIVATE);
+        //Session
+        session = prefs.getInt("Session", 0);
+        if(session == 1){
+            //Toast.makeText(this, String.valueOf("Connected Successfully through Google!"),Toast.LENGTH_SHORT).show();
+            //googleApiClient.connect();
+            startActivity(new Intent(this,categorypage.class));
+            //finish();
+        }
+        else if(session == 2){
+            //Toast.makeText(this, String.valueOf("Connected Successfully through Facebook!"),Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this,categorypage.class));
+            //finish();
+        }
 
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setScopes(gso.getScopeArray());
@@ -119,12 +127,35 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
         findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                (findViewById(R.id.facebookbutton)).setClickable(false);
+                //(findViewById(R.id.facebookbutton)).setClickable(false);
                 registerWay = "google";
-                signIn();
+                signInFromGitHub();
             }
         });
         //Internet.ShowScreenGroup(this);
+    }
+    private void signInFromGitHub()
+    {
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
+        if (opr.isDone()) {
+            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+            // and the GoogleSignInResult will be available instantly.
+            Log.d("firstAct", "Got cached sign-in");
+            GoogleSignInResult result = opr.get();
+            handleSignInResult(result);
+        } else {
+            // If the user has not previously signed in on this device or the sign-in has expired,
+            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
+            // single sign-on will occur in this branch.
+//            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+//                @Override
+//                public void onResult(GoogleSignInResult googleSignInResult) {
+//                    //hideProgressDialog();
+//                    handleSignInResult(googleSignInResult);
+//                }
+//            });
+            signIn();
+        }
     }
     protected void setGooglePlusButtonText(SignInButton signInButton,
                                            String buttonText) {
@@ -147,21 +178,26 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
                 prefs = getSharedPreferences("X", MODE_PRIVATE);
                 editor = prefs.edit();
                 editor.putString("lastActivityforDev", String.valueOf(firstAct.class.getName()));
-                editor.commit();
-                startActivity(new Intent(this,devPage.class));
+                editor.apply();
+                Intent i = new Intent(getApplicationContext(),devPage.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(i);
                 break;
             case R.id.facebookbutton:
-                (findViewById(R.id.sign_in_button)).setClickable(false);
+                //(findViewById(R.id.sign_in_button)).setClickable(false);
                 registerWay = "facebook";
                 loginOnClick();
-                Toast.makeText(this,"Logging through Facebook",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,"Logging with Facebook",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.setbtn:
                 prefs = getSharedPreferences("X", MODE_PRIVATE);
                 editor = prefs.edit();
                 editor.putString("lastActivity", String.valueOf(firstAct.class.getName()));
                 editor.commit();
-                startActivity(new Intent(this, settingcl.class));
+                Intent i2 = new Intent(getApplicationContext(),settingcl.class);
+                i2.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(i2);
+                //finish();
                 break;
         }
     }
@@ -185,7 +221,12 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
     @Override
     protected void onStart() {
         super.onStart();
+        if (googleApiClient != null)
+            googleApiClient.connect();
+        //if(!CameFromLogOut)
+        //    signInFromGitHub();
     }
+
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -200,6 +241,7 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
     }
 
     private void signIn() {
@@ -229,6 +271,7 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
     private void handleSignInResult(GoogleSignInResult result){
         String idToken = "";
         if (result.isSuccess()) {
+            googleApiClient.connect();
             GoogleSignInAccount acct = result.getSignInAccount();
             String personName = acct.getDisplayName();
             String personEmail = acct.getEmail();
@@ -250,12 +293,15 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
             SendSignInDetails("google",personId,personToken,personName,personEmail,"0","0");
             //TODO get gender for google sign in
 
-            Toast.makeText(this, String.valueOf("Connected Successfully!"), Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, categorypage.class));
+            //Toast.makeText(this, String.valueOf("Connected Successfully!"), Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(getApplicationContext(),categorypage.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(i);
+            //finish();
         } else {
             // Signed out
-            signOut();
-            Toast.makeText(this, "Please sign in again", Toast.LENGTH_SHORT).show();
+            googleApiClient.disconnect();
+            //Toast.makeText(this, "Please sign in again", Toast.LENGTH_SHORT).show();
         }
     }
     private void SendSignInDetails(String site, String personId,String personToken,String personName,String personEmail,String personBirthday,String personGender){
@@ -277,28 +323,19 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
         }).execute(myRequest);
 
     }
-    private void signOut() {
-        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        // ...
-                        UserData.LogOutData(getApplicationContext());
-                    }
-                });
-    }
+
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        Log.d("firstAct",connectionResult.toString());
     }
     private void loginOnClick(){
         LoginManager.getInstance().logOut();
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email", "user_birthday"));
-        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>(){
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 final AccessToken accessToken = loginResult.getAccessToken();
-                Toast.makeText(getApplicationContext(), "Successfull login.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Successfull login.", Toast.LENGTH_SHORT).show();
                 GraphRequest request = GraphRequest.newMeRequest(
                         accessToken,
                         new GraphRequest.GraphJSONObjectCallback() {
@@ -326,12 +363,13 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
                                     } catch (JSONException e) {
                                         birthday = "-1";
                                     }
-                                    SendSignInDetails("facebook",id,accessToken.getToken(),name,email,birthday,gender);
+                                    SendSignInDetails("facebook", id, accessToken.getToken(), name, email, birthday, gender);
                                     UserData.SaveUserData(getApplicationContext(), String.valueOf(accessToken.getToken()), id, name, email, birthday, null);
                                     startActivity(new Intent(getApplicationContext(), categorypage.class));
+                                    //finish();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                    Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -345,7 +383,7 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
             @Override
             public void onCancel() {
                 // App code
-                Toast.makeText(getApplicationContext(), "Login was cancelled.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Login was cancelled.", Toast.LENGTH_SHORT).show();
                 UserData.LogOutData(getApplicationContext());
                 LoginManager.getInstance().logOut();
             }
@@ -358,11 +396,23 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
                     LoginManager.getInstance().logInWithReadPermissions(firstAct.this, Arrays.asList("public_profile", "email", "user_birthday"));
                     //TODO check this thing again..
                 }
-                Log.e("Login Error : ",exception.toString());
-                Toast.makeText(getApplicationContext(), "Exeption: " + exception.toString(), Toast.LENGTH_SHORT).show();
+                //Log.e("Login Error : ",exception.toString());
+                //Toast.makeText(getApplicationContext(), "Exeption: " + exception.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+    private void signOut() {
+        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        // ...
+                        //UserData.LogOutData(getApplicationContext());
+                    }
+                });
+    }
+
     private void setupTokenTracker() {
         mTokenTracker = new AccessTokenTracker() {
             @Override
@@ -374,5 +424,21 @@ public class firstAct extends AppCompatActivity implements GoogleApiClient.OnCon
     private boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         return accessToken != null;
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.d("firstAct",String.valueOf(googleApiClient.isConnected()));
+        if (CameFromLogOut) {
+            signOut();
+            Log.d("firstAct",String.valueOf(googleApiClient.isConnected()));
+            //googleApiClient.disconnect();
+            CameFromLogOut = false;
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.d("firstAct",String.valueOf(i));
     }
 }

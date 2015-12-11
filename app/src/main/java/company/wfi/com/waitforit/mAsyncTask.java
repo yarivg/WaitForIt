@@ -58,7 +58,7 @@ public class mAsyncTask extends AsyncTask<String,String,JSONObject>{
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = br.readLine()) != null) {
-                Log.d("mAsyncTask", line);
+                //Log.d("mAsyncTask", line);
                 result += line;
             }
             result = result.replace("[","");
@@ -67,10 +67,10 @@ public class mAsyncTask extends AsyncTask<String,String,JSONObject>{
             object = new JSONObject(result);
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("WAITFORIT","ERROR AT CONNECTION");
+            //Log.e("WAITFORIT","ERROR AT CONNECTION");
         }catch (JSONException e){
             e.printStackTrace();
-            Log.e("WAITFORIT", "ERROR AT parsing string to jsonobjcet");
+            //Log.e("WAITFORIT", "ERROR AT parsing string to jsonobjcet");
         }
         return object;
     }

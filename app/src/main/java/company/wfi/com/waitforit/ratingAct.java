@@ -86,7 +86,10 @@ public class ratingAct extends Activity implements View.OnClickListener {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(getApplicationContext(), waitingcompleteAct.class));
+                                Intent i = new Intent(getApplicationContext(),waitingcompleteAct.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivity(i);
+                                finish();
                             }
 
                         })
@@ -103,7 +106,10 @@ public class ratingAct extends Activity implements View.OnClickListener {
                 playlistInfo.NextInPlaylist(this);
             }
             else{
-                startActivity(new Intent(getApplicationContext(), waitingcompleteAct.class));
+                Intent i = new Intent(getApplicationContext(),waitingcompleteAct.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(i);
+                finish();
             }
         }
     }
@@ -146,14 +152,14 @@ public class ratingAct extends Activity implements View.OnClickListener {
                 prefs = getSharedPreferences("X",MODE_PRIVATE);
                 String mUserId = prefs.getString("UserId", "-1");
                 if(mUserId.equals(str)){
-                    Log.d("ratingAct","Send Rating Succeed.");
+                    //Log.d("ratingAct","Send Rating Succeed.");
                 }
             }
         }).execute(fullRequest);
     }
     @Override
     public void onBackPressed() {
-        Toast.makeText(this,"Back button is currently disabled here.",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"Back button is currently disabled here.",Toast.LENGTH_SHORT).show();
     }
     public void StartTimer(){
         //A function which starts the timer or continue it
@@ -202,7 +208,10 @@ public class ratingAct extends Activity implements View.OnClickListener {
             super.onProgressUpdate(alpha);
             try {
                 Thread.sleep(1000);
-                startActivity(new Intent(getApplicationContext(), discriptionAct.class));
+                Intent i = new Intent(getApplicationContext(),discriptionAct.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(i);
+                finish();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

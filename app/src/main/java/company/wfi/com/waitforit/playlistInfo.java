@@ -2,6 +2,7 @@ package company.wfi.com.waitforit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -28,8 +29,8 @@ public class playlistInfo {
     categories - an array of strings which contains the categories that the user want to get.
                 Example - recieveJsonPlaylist(25,3,["Videos","Games"])
      */
-    public static void recieveJsonPlaylist(final Context context, final int waitingTimeMinutes,int waitingPlace,String categories){
-        String myFullRequest = serverURL +"total_time=1" +categories;
+    public static void recieveJsonPlaylist(final Context context, final int waitingTimeMinutes,int waitingPlace,String categories,String userId){
+        String myFullRequest = serverURL +"total_time=" +waitingTimeMinutes + categories +"&user_id=" + userId;
         mAsyncTaskForObjectArray mAsyncTask = (company.wfi.com.waitforit.mAsyncTaskForObjectArray) new mAsyncTaskForObjectArray(new mAsyncTaskForObjectArray.AsyncResponse() {
             @Override
             public void processFinish(JSONArray array) {
@@ -47,13 +48,14 @@ public class playlistInfo {
                         //if(type.equals("2"))
                             mPlaylist.add(new ItemInPlaylist(id,url,type));
                     }
-                    Log.d("playlistInfo", "AsyncTask Created the plalist");
+                    //Log.d("playlistInfo", "AsyncTask Created the plalist");
                     if(mPlaylist.size() > 0){
                         Toast.makeText(context, "We Successfully Craeted Your Playlist!", Toast.LENGTH_SHORT).show();
                         if(mPlaylist.get(0).getType().equals("1")){//video
                             videopage.timeInSec = waitingTimeMinutes*60;
                             videopage.videoURL = mPlaylist.get(0).getUrl();
                             context.startActivity(new Intent(context,videopage.class));
+
                         }
                         else if(mPlaylist.get(0).getType().equals("2")){//game
                             discriptionAct.timeInSec = waitingTimeMinutes*60;
@@ -63,10 +65,10 @@ public class playlistInfo {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.e("playlistInfo","Error Creating the playlist");
+                    //Log.e("playlistInfo","Error Creating the playlist");
                 }catch (NullPointerException e){
                     e.printStackTrace();
-                    Log.e("playlistInfo","NullPointExeption");
+                    //Log.e("playlistInfo","NullPointExeption");
                 }
             }
         }).execute(myFullRequest);

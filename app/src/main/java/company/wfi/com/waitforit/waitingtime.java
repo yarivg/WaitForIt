@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -127,6 +128,7 @@ public class waitingtime extends Activity implements View.OnClickListener {
                 break;
             case R.id.previousbutton:
                 startActivity(new Intent(this,placepage.class));
+                finish();
                 break;
             case R.id.waitingtime:
             case R.id.startwaiting:
@@ -154,12 +156,13 @@ public class waitingtime extends Activity implements View.OnClickListener {
                 editor.putString("lastActivity", String.valueOf(waitingtime.class.getName()));
                 editor.commit();
                 startActivity(new Intent(this, settingcl.class));
+                finish();
                 break;
         }
     }
     @Override
     public void onBackPressed() {
-        Toast.makeText(this,"Back button is currently disabled.",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"Back button is currently disabled.",Toast.LENGTH_SHORT).show();
     }
     private void createWaitingDetails() {
         waitingDetails wd = new waitingDetails();
@@ -179,7 +182,10 @@ public class waitingtime extends Activity implements View.OnClickListener {
         myClock.StartClock(arr2[index - 1]);
         wd.setWaitingPlace(waitingPlace);
         gameAct.lastGameUrl = "";
-        playlistInfo.recieveJsonPlaylist(this,arr2[index-1],waitingPlace,wd.getCategoryString());
+        Toast.makeText(this,"Wait For It...",Toast.LENGTH_SHORT).show();
+        SharedPreferences prefs = getSharedPreferences("X",MODE_PRIVATE);
+        String mUserId = prefs.getString("UserId", "0");
+        playlistInfo.recieveJsonPlaylist(this,arr2[index-1],waitingPlace,wd.getCategoryString(),mUserId);
     }
 
 
@@ -245,5 +251,6 @@ public class waitingtime extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //Log.d("waitingtime","onDestroy");
     }
 }

@@ -52,7 +52,7 @@ public class mAsyncTaskForObjectArray extends AsyncTask<String, String, JSONArra
             BufferedReader br = new BufferedReader(isReader);
             String line;
             while ((line = br.readLine()) != null) {
-                Log.d("mAsyncTask", line);
+                //Log.d("mAsyncTask", line);
                 result += line;
             }
             result = result.replace("[", "");
@@ -64,10 +64,10 @@ public class mAsyncTaskForObjectArray extends AsyncTask<String, String, JSONArra
             array = new JSONArray(result);
             } catch (IOException e) {
             e.printStackTrace();
-            Log.e("WAITFORIT", "ERROR AT CONNECTION");
+            //Log.e("WAITFORIT", "ERROR AT CONNECTION");
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.e("WAITFORIT", "ERROR AT parsing string to jsonobjcet");
+            //Log.e("WAITFORIT", "ERROR AT parsing string to jsonobjcet");
         }
         return array;
     }

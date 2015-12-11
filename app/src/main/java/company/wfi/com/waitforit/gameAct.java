@@ -1,7 +1,9 @@
 package company.wfi.com.waitforit;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -10,7 +12,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.text.LoginFilter;
 import android.util.Config;
 import android.util.DisplayMetrics;
@@ -31,45 +32,21 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.apache.cordova.CordovaWebView;
-import org.apache.cordova.api.CordovaInterface;
-import org.apache.cordova.api.IPlugin;
-import org.apache.cordova.api.LOG;
 
-public class gameAct extends Activity implements View.OnClickListener,CordovaInterface {
+public class gameAct extends Activity implements View.OnClickListener {
 
-    final CountDownTimer countDownTimer = new CountDownTimer(timeInSec * toMINUTE, 1000) {//CountDownTimer(edittext1.getText()+edittext2.getText()) also parse it to long
-        public void onTick(long millisUntilFinished) {
-            if (millisUntilFinished / 1000 / 60 >= 10) {
-                if (millisUntilFinished / 1000 % 60 >= 10)
-                    timer.setText(String.valueOf(millisUntilFinished / 1000 / 60 + ":" + millisUntilFinished / 1000 % 60));
-                else
-                    timer.setText(String.valueOf(millisUntilFinished / 1000 / 60 + ":0" + millisUntilFinished / 1000 % 60));
-            } else {
-                if (millisUntilFinished / 1000 % 60 >= 10)
-                    timer.setText("0" + String.valueOf(millisUntilFinished / 1000 / 60 + ":" + millisUntilFinished / 1000 % 60));
-                else
-                    timer.setText("0" + String.valueOf(millisUntilFinished / 1000 / 60 + ":0" + millisUntilFinished / 1000 % 60));
-            }
-            timeInSec = (int) millisUntilFinished / 1000;
-        }
-
-        public void onFinish() {
-            timer.setText("00:00");
-        }
-    };
     boolean pause = true;
     private int topMarginTimer,heightTimer = 80;
-    ImageButton pauseGame;
     public static String[] games = new String[9];
     public static WebView mainView;
     public static boolean firstJS = true;
     public static String lastGameUrl = "";
-    private IPlugin activityResultCallback;
     private Object activityResultKeepRunning;
     private Object keepRunning;
     public static int timeInSec = 0;
     private TextView timer;
+
+    private ImageButton skipBtn,stopBtn,exitBtn;
 
     public static boolean loadNewGame = false;
     private static final int toMINUTE = 1000;
@@ -88,7 +65,6 @@ public class gameAct extends Activity implements View.OnClickListener,CordovaInt
                 this.$totalTime = $totalTime;
                 ratingAct.total_score = $points;
                 ratingAct.total_time = $totalTime;
-                countDownTimer.cancel();
                 ratingAct.timeInSec = timeInSec;
                 startActivity(new Intent(getApplicationContext(), ratingAct.class));
                 //context.startActivity(new Intent(context.getApplicationContext(),ratingAct.class));
@@ -105,47 +81,58 @@ public class gameAct extends Activity implements View.OnClickListener,CordovaInt
         timer = (TextView)findViewById(R.id.timertxt);
         Typeface fontTimer = Typeface.createFromAsset(getAssets(),"fonts/Ailerons.ttf");
         timer.setTypeface(fontTimer);
-        pauseGame = (ImageButton)findViewById(R.id.pausegame);
-        pauseGame.setOnClickListener(this);
 
-        //countDownTimer.start();
+        stopBtn = (ImageButton)findViewById(R.id.pausegame);
+        skipBtn = (ImageButton)findViewById(R.id.skipgame);
+        exitBtn = (ImageButton)findViewById(R.id.exitplalistbtn);
+        stopBtn.setOnClickListener(this);
+        skipBtn.setOnClickListener(this);
+        exitBtn.setOnClickListener(this);
+
         StartThisClock();
-        gameAct.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mainView = (WebView) findViewById(R.id.mainView);
-                mainView.getSettings().setJavaScriptEnabled(true);
-                mainView.setBackgroundColor(Color.WHITE);
-                mainView.setWebViewClient(new WebViewClient() {
-                    @Override
-                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                        Log.d("url", url);
-                        return false;
-                    }
 
-                    @Override
-                    public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                        super.onPageStarted(view, url, favicon);
-                        Log.d("url", "Page started");
-                    }
+            gameAct.this.
 
-                    @Override
-                    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                        super.onReceivedError(view, errorCode, description, failingUrl);
-                        Log.d("url", description);
-                    }
-                });
-                mainView.setWebChromeClient(new WebChromeClient());
-                mainView.getSettings().setDomStorageEnabled(true);
-                mainView.getSettings().setSupportMultipleWindows(true);
-                mainView.setLayerType(WebView.LAYER_TYPE_HARDWARE, null);
-                MyInterface myInterface = new MyInterface();
-                myInterface.context = getApplicationContext();
-                mainView.addJavascriptInterface(myInterface, "myInterface");
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run () {
+                    mainView = (WebView) findViewById(R.id.mainView);
+                    mainView.getSettings().setJavaScriptEnabled(true);
+                    mainView.setBackgroundColor(Color.WHITE);
+                    mainView.setWebViewClient(new WebViewClient() {
+                        @Override
+                        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                            //Log.d("url", url);
+                            return false;
+                        }
+
+                        @Override
+                        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                            super.onPageStarted(view, url, favicon);
+                            //Log.d("url", "Page started");
+                        }
+
+                        @Override
+                        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                            super.onReceivedError(view, errorCode, description, failingUrl);
+                            //Log.d("url", description);
+                        }
+                    });
+                    mainView.setWebChromeClient(new WebChromeClient());
+                    mainView.getSettings().setDomStorageEnabled(true);
+                    mainView.getSettings().setSupportMultipleWindows(true);
+                    mainView.setLayerType(WebView.LAYER_TYPE_HARDWARE, null);
+                    MyInterface myInterface = new MyInterface();
+                    myInterface.context = getApplicationContext();
+                    mainView.addJavascriptInterface(myInterface, "myInterface");
+                }
             }
-        });
-        MakePlayerFullScreenPortrait();
-    }
+
+            );
+
+            MakePlayerFullScreenPortrait();
+        }
+
     private void StartThisClock() {
         Thread t = new Thread() {
 
@@ -167,6 +154,15 @@ public class gameAct extends Activity implements View.OnClickListener,CordovaInt
             }
         };
         t.start();
+    }
+    private void gameSkipped(){
+        Log.d("gameAct","gameSkipped");
+        firstJS = false;
+        lastGameUrl = playlistInfo.mPlaylist.get(playlistInfo.indexInList).getUrl();
+        ratingAct.total_score = "0";
+        ratingAct.total_time = "0";
+        ratingAct.timeInSec = timeInSec;
+        startActivity(new Intent(getApplicationContext(), ratingAct.class));
     }
     private void MakePlayerFullScreenPortrait(){
         FrameLayout.LayoutParams myLayout = (FrameLayout.LayoutParams)mainView.getLayoutParams();
@@ -203,17 +199,22 @@ public class gameAct extends Activity implements View.OnClickListener,CordovaInt
     @Override
     public void onBackPressed() {
         PauseGame();
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Exiting Playlist")
+                .setMessage("Are you sure you want to exit the playlist?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        lastGameUrl = "";
+                        startActivity(new Intent(getApplicationContext(), waitingcompleteAct.class));
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
-    @Override
-    public Context getContext() {
-        return null;
-    }
-
-    @Override
-    public void cancelLoadUrl() {
-
-    }
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -225,25 +226,24 @@ public class gameAct extends Activity implements View.OnClickListener,CordovaInt
                    ResumeGame();
                 }
                 break;
+            case R.id.exitplalistbtn:
+                onBackPressed();
+                break;
+            case R.id.skipgame:
+                gameSkipped();
+                break;
         }
     }
     private void PauseGame() {
-        if (Build.VERSION.SDK_INT < 19) {
-            Toast.makeText(this,"Your android version dosen't support pausing games.",Toast.LENGTH_SHORT).show();
-        } else {
-            mainView.onPause();
-            pauseGame.setImageResource(R.drawable.resumegame);
-            pause = false;
-        }
+        mainView.onPause();
+        stopBtn.setImageResource(R.drawable.resumegame);
+        pause = false;
     }
     private void ResumeGame() {
-        if (Build.VERSION.SDK_INT < 19) {
-            Toast.makeText(this,"Your android version dosen't support resuming games.",Toast.LENGTH_SHORT).show();
-        } else {
-            mainView.onResume();
-            pauseGame.setImageResource(R.drawable.pausegame);
-            pause = true;
-        }
+        mainView.onResume();
+        stopBtn.setImageResource(R.drawable.finalstop);
+        pause = true;
+
     }
 
     @Override
@@ -270,7 +270,7 @@ public class gameAct extends Activity implements View.OnClickListener,CordovaInt
             mainView.loadUrl(currentUrl);
             loadNewGame = false;
             mainView.onResume();
-            pauseGame.setImageResource(R.drawable.pausegame);
+            stopBtn.setImageResource(R.drawable.finalstop);
             pause = true;
         }
         Log.d("testURl", "onStart()");
@@ -291,30 +291,14 @@ public class gameAct extends Activity implements View.OnClickListener,CordovaInt
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //countDownTimer.cancel();
 
         //finish();
         Log.d("url", "onDestroy");
     }
 
-    @Override
-    public void startActivityForResult(IPlugin iPlugin, Intent intent, int i) {
-
-    }
-
-    @Override
-    public void setActivityResultCallback(IPlugin plugin) {
-        this.activityResultCallback = plugin;
-    }
-
-
-    @Override
-    public Activity getActivity() {
-        return this;
-    }
 
     public Object onMessage(String id, Object data) {
-        LOG.d("gameAct", "onMessage(" + id + "," + data + ")");
+        //Log.d("gameAct", "onMessage(" + id + "," + data + ")");
         mainView.reload();
         if ("exit".equals(id)) {
             super.finish();

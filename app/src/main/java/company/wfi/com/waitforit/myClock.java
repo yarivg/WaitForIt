@@ -1,6 +1,7 @@
 package company.wfi.com.waitforit;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -21,6 +22,10 @@ public class myClock {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                }
+                if(timeLeftSec == 0) {
+                    firstTime = true;
+                    Log.d("myClock", "Clock ended");
                 }
             }
         }));

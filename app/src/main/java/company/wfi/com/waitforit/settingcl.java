@@ -29,6 +29,9 @@ import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareButton;
 import com.facebook.share.widget.ShareDialog;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 public class settingcl extends Activity implements View.OnClickListener {
 
@@ -96,6 +99,7 @@ public class settingcl extends Activity implements View.OnClickListener {
         switch (view.getId()){
             case R.id.aboutbtn:
                 startActivity(new Intent(this,devPage.class));
+                finish();
                 break;
             case R.id.rateusbtn:
                 Toast.makeText(this,"Thank you! But this is only a beta version",Toast.LENGTH_SHORT).show();
@@ -103,13 +107,14 @@ public class settingcl extends Activity implements View.OnClickListener {
                 break;
             case R.id.sharefacebookbtn:
                 ShareOnFacebook();
-                Toast.makeText(this, "Sharing through facebook...", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Sharing through facebook...", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.settimebtn:
                 startActivity(new Intent(this, setdefulattimeact.class));
+                finish();
                 break;
             case R.id.contactusbtn:
-                Toast.makeText(this, "Contact us...", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Contact us...", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("message/rfc822");
                 i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"Servicewfi@gmail.com"});
@@ -134,12 +139,16 @@ public class settingcl extends Activity implements View.OnClickListener {
                 } catch(ClassNotFoundException ex) {
                     activityClass = settingcl.class;
                 }
-                startActivity(new Intent(this, activityClass));
+                Intent mIntent = new Intent(this, activityClass);
+                mIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(mIntent);
+                finish();
                 break;
             case R.id.logoutbtn:
                 ShowDialog("Are you sure you want to log out?", "Yes", "No");
         }
     }
+
     public void ShowDialog(String titleMessage,String posbuttonMessage,String negbuttonMessage){
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(titleMessage);
@@ -147,8 +156,10 @@ public class settingcl extends Activity implements View.OnClickListener {
         builder.setPositiveButton(posbuttonMessage, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 UserData.LogOutData(getApplicationContext());
+                Intent i = new Intent(getApplicationContext(),firstAct.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(i);
                 finish();
-                startActivity(new Intent(getApplicationContext(),firstAct.class));
             }
         });
         builder.setNegativeButton(negbuttonMessage, new DialogInterface.OnClickListener() {
